@@ -22,8 +22,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fiche{background:#fff;border:1px solid #e0e0d8;border-radius:12px;margin-bottom:10px;overflow:hidden}
 .fiche-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
 .fiche-header h3{font-size:15px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:8px}
-.fiche-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
-.fiche-body.open{max-height:1000px;padding:0 16px 16px}
+.fiche-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s}
+.fiche-body.open{max-height:2400px;padding:0 16px 16px}
 .fiche-body p{font-size:14px;color:#333;line-height:1.7;margin-bottom:10px}
 .fiche-body ul,ol{padding-left:1.4rem;margin-bottom:10px}
 .fiche-body li{font-size:14px;color:#333;line-height:1.8}
@@ -36,6 +36,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .mini-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
 .mini-table th{background:#f5f5f0;padding:7px 10px;text-align:left;font-weight:600;font-size:12px;color:#666;border:1px solid #e0e0d8}
 .mini-table td{padding:7px 10px;border:1px solid #e0e0d8;color:#333;vertical-align:top;line-height:1.5}
+.schema-wrap{background:#f9f9f6;border:1px solid #e8e8e0;border-radius:10px;padding:12px;margin:12px 0;text-align:center}
+.schema-wrap svg{max-width:100%;height:auto}
+.schema-label{font-size:12px;color:#888;margin-top:6px;font-style:italic}
 .progress-wrap{background:#e8e8e4;border-radius:8px;height:6px;margin-bottom:14px;overflow:hidden}
 .progress-fill{height:100%;border-radius:8px;background:#1a1a1a;transition:width .3s}
 .stats{display:flex;gap:8px;margin-bottom:14px}
@@ -71,7 +74,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .chevron.open{transform:rotate(180deg)}
 .section-title{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px}
 .tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;margin-right:6px;margin-bottom:4px}
-.divider{border:none;border-top:1px solid #e8e8e4;margin:12px 0}
 @media(max-width:500px){
   .subject-tabs{flex-direction:column}
   .stats{flex-wrap:wrap}
@@ -83,60 +85,435 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 <div class="app">
-
 <div class="header">
   <h1>📚 Révision Brevet 2026</h1>
-  <p>Fiches de cours + 20 exercices par matière · Corrections immédiates</p>
+  <p>Fiches de cours avec schémas + 20 exercices par matière</p>
 </div>
-
 <div class="subject-tabs" id="stabs">
   <button class="stab active" onclick="switchSubject(0)">📐 Mathématiques</button>
   <button class="stab" onclick="switchSubject(1)">🗺️ Histoire-Géo & EMC</button>
   <button class="stab" onclick="switchSubject(2)">🔬 Sciences</button>
 </div>
-
 <div class="mode-btns">
   <button class="mbtn active" id="mb0" onclick="switchMode('fiches')">📖 Fiches de révision</button>
   <button class="mbtn" id="mb1" onclick="switchMode('exos')">✏️ Exercices (20 questions)</button>
 </div>
-
 <div id="main-area"></div>
-
 </div>
 
 <script>
+const SVG = {
+  pythagore:`<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="320" height="220">
+  <rect width="320" height="220" fill="#f9f9f6" rx="8"/>
+  <polygon points="60,170 260,170 60,50" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="60" y="150" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <text x="40" y="178" font-size="14" fill="#1e40af" font-weight="700">C</text>
+  <text x="268" y="178" font-size="14" fill="#1e40af" font-weight="700">B</text>
+  <text x="48" y="46" font-size="14" fill="#1e40af" font-weight="700">A</text>
+  <text x="150" y="190" font-size="13" fill="#1d4ed8" text-anchor="middle">BC (côté)</text>
+  <text x="30" y="118" font-size="13" fill="#1d4ed8" text-anchor="middle">AC</text>
+  <text x="174" y="100" font-size="13" fill="#dc2626" font-weight="700" text-anchor="middle">AB = hypoténuse</text>
+  <text x="160" y="26" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">AB² = AC² + BC²</text>
+  <text x="160" y="44" font-size="12" fill="#666" text-anchor="middle">Angle droit en C</text>
+  <line x1="90" y1="68" x2="185" y2="112" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+</svg>`,
+
+  thales:`<svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="320" height="230">
+  <rect width="320" height="230" fill="#f9f9f6" rx="8"/>
+  <line x1="160" y1="20" x2="60" y2="190" stroke="#6b7280" stroke-width="1.5"/>
+  <line x1="160" y1="20" x2="270" y2="190" stroke="#6b7280" stroke-width="1.5"/>
+  <line x1="80" y1="120" x2="220" y2="120" stroke="#3b82f6" stroke-width="2.5"/>
+  <line x1="60" y1="190" x2="270" y2="190" stroke="#059669" stroke-width="2.5"/>
+  <circle cx="160" cy="20" r="5" fill="#1e40af"/>
+  <circle cx="80" cy="120" r="5" fill="#3b82f6"/>
+  <circle cx="220" cy="120" r="5" fill="#3b82f6"/>
+  <circle cx="60" cy="190" r="5" fill="#059669"/>
+  <circle cx="270" cy="190" r="5" fill="#059669"/>
+  <text x="168" y="18" font-size="13" fill="#1e40af" font-weight="700">A</text>
+  <text x="64" y="118" font-size="13" fill="#3b82f6" font-weight="700">D</text>
+  <text x="224" y="118" font-size="13" fill="#3b82f6" font-weight="700">E</text>
+  <text x="42" y="208" font-size="13" fill="#059669" font-weight="700">B</text>
+  <text x="274" y="208" font-size="13" fill="#059669" font-weight="700">C</text>
+  <text x="148" y="112" font-size="11" fill="#3b82f6">DE // BC</text>
+  <text x="160" y="218" font-size="11" fill="#059669" text-anchor="middle">BC (grand côté)</text>
+  <rect x="4" y="140" width="314" height="22" rx="4" fill="#fef9c3"/>
+  <text x="160" y="155" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">AD/AB = AE/AC = DE/BC</text>
+</svg>`,
+
+  trigo:`<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="320" height="220">
+  <rect width="320" height="220" fill="#f9f9f6" rx="8"/>
+  <polygon points="50,180 280,180 50,60" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <rect x="50" y="160" width="20" height="20" fill="none" stroke="#d97706" stroke-width="2"/>
+  <path d="M 80,180 A 30,30 0 0,0 64,160" fill="none" stroke="#ef4444" stroke-width="2"/>
+  <text x="82" y="172" font-size="12" fill="#dc2626" font-weight="700">α</text>
+  <text x="36" y="188" font-size="13" fill="#92400e" font-weight="700">A</text>
+  <text x="284" y="188" font-size="13" fill="#92400e" font-weight="700">B</text>
+  <text x="36" y="58" font-size="13" fill="#92400e" font-weight="700">C</text>
+  <text x="160" y="198" font-size="12" fill="#b45309" text-anchor="middle">côté adjacent</text>
+  <text x="22" y="126" font-size="12" fill="#b45309" text-anchor="middle" transform="rotate(-90,22,126)">côté opposé</text>
+  <text x="184" y="108" font-size="12" fill="#dc2626" font-weight="700" text-anchor="middle">hypoténuse (BC)</text>
+  <rect x="4" y="4" width="314" height="46" rx="6" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+  <text x="160" y="20" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">cos α = adjacent/hyp   sin α = opposé/hyp</text>
+  <text x="160" y="38" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">tan α = opposé/adjacent     SOH-CAH-TOA</text>
+</svg>`,
+
+  fonctions:`<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="320" height="220">
+  <rect width="320" height="220" fill="#f9f9f6" rx="8"/>
+  <line x1="30" y1="110" x2="300" y2="110" stroke="#9ca3af" stroke-width="1.5"/>
+  <line x1="90" y1="10" x2="90" y2="210" stroke="#9ca3af" stroke-width="1.5"/>
+  <text x="302" y="114" font-size="12" fill="#6b7280">x</text>
+  <text x="93" y="14" font-size="12" fill="#6b7280">y</text>
+  <line x1="30" y1="170" x2="280" y2="30" stroke="#3b82f6" stroke-width="2.5"/>
+  <line x1="30" y1="50" x2="280" y2="180" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,3"/>
+  <circle cx="90" cy="134" r="5" fill="#3b82f6"/>
+  <circle cx="90" cy="86" r="5" fill="#ef4444"/>
+  <text x="96" y="138" font-size="11" fill="#3b82f6">b = −2 (ord. origine)</text>
+  <text x="96" y="82" font-size="11" fill="#ef4444">b = +2</text>
+  <text x="220" y="44" font-size="12" fill="#3b82f6" font-weight="700">a &gt; 0 : croissante</text>
+  <text x="200" y="188" font-size="12" fill="#ef4444" font-weight="700">a &lt; 0 : décroissante</text>
+  <rect x="4" y="194" width="314" height="22" rx="4" fill="#dbeafe"/>
+  <text x="160" y="209" font-size="12" fill="#1e40af" font-weight="700" text-anchor="middle">f(x) = ax + b     pente a = (y2−y1)/(x2−x1)</text>
+</svg>`,
+
+  volumes:`<svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" width="320" height="160">
+  <rect width="320" height="160" fill="#f9f9f6" rx="8"/>
+  <ellipse cx="56" cy="88" rx="28" ry="28" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="56" y="92" font-size="11" fill="#1e40af" font-weight="700" text-anchor="middle">π×r²</text>
+  <text x="56" y="130" font-size="11" fill="#1e40af" text-anchor="middle">Disque</text>
+  <ellipse cx="130" cy="70" rx="22" ry="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="108" y="70" width="44" height="40" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <ellipse cx="130" cy="110" rx="22" ry="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="130" y="92" font-size="10" fill="#92400e" font-weight="700" text-anchor="middle">π×r²×h</text>
+  <text x="130" y="130" font-size="11" fill="#92400e" text-anchor="middle">Cylindre</text>
+  <polygon points="200,50 172,120 228,120" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <ellipse cx="200" cy="120" rx="28" ry="7" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="200" y="92" font-size="10" fill="#065f46" font-weight="700" text-anchor="middle">⅓πr²h</text>
+  <text x="200" y="144" font-size="11" fill="#065f46" text-anchor="middle">Cône</text>
+  <circle cx="278" cy="85" r="30" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+  <text x="278" y="89" font-size="10" fill="#9d174d" font-weight="700" text-anchor="middle">4/3πr³</text>
+  <text x="278" y="130" font-size="11" fill="#9d174d" text-anchor="middle">Boule</text>
+</svg>`,
+
+  probas:`<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" width="320" height="180">
+  <rect width="320" height="180" fill="#f9f9f6" rx="8"/>
+  <rect x="10" y="10" width="300" height="30" rx="6" fill="#1a1a1a"/>
+  <text x="160" y="30" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">P(A) = cas favorables / cas possibles</text>
+  <rect x="10" y="50" width="92" height="50" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1"/>
+  <text x="56" y="70" font-size="12" fill="#7f1d1d" font-weight="700" text-anchor="middle">P(A) = 0</text>
+  <text x="56" y="88" font-size="11" fill="#7f1d1d" text-anchor="middle">Impossible</text>
+  <rect x="114" y="50" width="92" height="50" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <text x="160" y="70" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">0 &lt; P(A) &lt; 1</text>
+  <text x="160" y="88" font-size="11" fill="#92400e" text-anchor="middle">Possible</text>
+  <rect x="218" y="50" width="92" height="50" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+  <text x="264" y="70" font-size="12" fill="#064e3b" font-weight="700" text-anchor="middle">P(A) = 1</text>
+  <text x="264" y="88" font-size="11" fill="#064e3b" text-anchor="middle">Certain</text>
+  <rect x="10" y="112" width="300" height="28" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+  <text x="160" y="130" font-size="12" fill="#4c1d95" font-weight="700" text-anchor="middle">P(A) + P(Ā) = 1   →   P(Ā) = 1 − P(A)</text>
+  <rect x="10" y="148" width="300" height="24" rx="6" fill="#f3f4f6"/>
+  <text x="160" y="163" font-size="12" fill="#374151" text-anchor="middle">Ex : dé à 6 faces → P(pair) = 3/6 = 1/2</text>
+</svg>`,
+
+  guerrefroide:`<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" width="320" height="210">
+  <rect width="320" height="210" fill="#f9f9f6" rx="8"/>
+  <rect x="8" y="8" width="140" height="130" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="172" y="8" width="140" height="130" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="78" y="32" font-size="13" fill="#1e40af" font-weight="700" text-anchor="middle">BLOC OCCIDENTAL</text>
+  <text x="78" y="50" font-size="18" text-anchor="middle">🇺🇸</text>
+  <text x="78" y="72" font-size="11" fill="#1e40af" text-anchor="middle">États-Unis</text>
+  <text x="78" y="88" font-size="11" fill="#1e40af" text-anchor="middle">Capitalisme</text>
+  <text x="78" y="104" font-size="11" fill="#1e40af" text-anchor="middle">Démocratie</text>
+  <text x="78" y="120" font-size="11" fill="#1e40af" text-anchor="middle">OTAN (1949)</text>
+  <text x="242" y="32" font-size="13" fill="#991b1b" font-weight="700" text-anchor="middle">BLOC ORIENTAL</text>
+  <text x="242" y="50" font-size="18" text-anchor="middle">🇷🇺</text>
+  <text x="242" y="72" font-size="11" fill="#991b1b" text-anchor="middle">URSS</text>
+  <text x="242" y="88" font-size="11" fill="#991b1b" text-anchor="middle">Communisme</text>
+  <text x="242" y="104" font-size="11" fill="#991b1b" text-anchor="middle">Régime soviétique</text>
+  <text x="242" y="120" font-size="11" fill="#991b1b" text-anchor="middle">Pacte de Varsovie</text>
+  <line x1="148" y1="73" x2="172" y2="73" stroke="#374151" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr2)"/>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#374151"/></marker>
+    <marker id="arr2" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto"><path d="M8,0 L8,6 L0,3 z" fill="#374151"/></marker>
+  </defs>
+  <text x="160" y="68" font-size="10" fill="#374151" text-anchor="middle">TENSION</text>
+  <rect x="8" y="148" width="304" height="56" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="160" y="166" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">⚠️ Guerre FROIDE = pas de guerre directe</text>
+  <text x="160" y="182" font-size="11" fill="#92400e" text-anchor="middle">Affrontements indirects : Corée, Vietnam, Cuba...</text>
+  <text x="160" y="197" font-size="11" fill="#92400e" text-anchor="middle">Arme principale : dissuasion nucléaire</text>
+</svg>`,
+
+  aireurb:`<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+  <rect width="300" height="300" fill="#f9f9f6" rx="8"/>
+  <circle cx="150" cy="150" r="130" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <circle cx="150" cy="150" r="90" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <circle cx="150" cy="150" r="52" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="150" cy="150" r="24" fill="#3b82f6"/>
+  <text x="150" y="154" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">Ville-centre</text>
+  <text x="150" y="202" font-size="11" fill="#1e40af" font-weight="700" text-anchor="middle">Banlieue</text>
+  <text x="150" y="248" font-size="11" fill="#92400e" font-weight="700" text-anchor="middle">Espace périurbain</text>
+  <text x="150" y="290" font-size="11" fill="#065f46" font-weight="700" text-anchor="middle">Espace rural</text>
+  <line x1="150" y1="168" x2="150" y2="175" stroke="#666" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="150" y1="215" x2="150" y2="222" stroke="#666" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="150" y1="258" x2="150" y2="265" stroke="#666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="6" y="20" font-size="12" fill="#1a1a1a" font-weight="700">AIRE URBAINE</text>
+  <path d="M 150,130 C 120,100 90,120 100,90" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#red)"/>
+  <text x="48" y="86" font-size="10" fill="#dc2626">trajets</text>
+  <text x="42" y="98" font-size="10" fill="#dc2626">domicile-travail</text>
+  <defs><marker id="red" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#dc2626"/></marker></defs>
+</svg>`,
+
+  democratie:`<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="320" height="220">
+  <rect width="320" height="220" fill="#f9f9f6" rx="8"/>
+  <ellipse cx="160" cy="36" rx="80" ry="24" fill="#1a1a1a"/>
+  <text x="160" y="40" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">CITOYENS (vote)</text>
+  <line x1="80" y1="56" x2="50" y2="96" stroke="#6b7280" stroke-width="1.5"/>
+  <line x1="160" y1="60" x2="160" y2="96" stroke="#6b7280" stroke-width="1.5"/>
+  <line x1="240" y1="56" x2="270" y2="96" stroke="#6b7280" stroke-width="1.5"/>
+  <rect x="8" y="96" width="90" height="56" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="53" y="116" font-size="11" fill="#1e40af" font-weight="700" text-anchor="middle">LÉGISLATIF</text>
+  <text x="53" y="130" font-size="10" fill="#1e40af" text-anchor="middle">Parlement</text>
+  <text x="53" y="143" font-size="10" fill="#1e40af" text-anchor="middle">Vote les lois</text>
+  <rect x="115" y="96" width="90" height="56" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="160" y="116" font-size="11" fill="#92400e" font-weight="700" text-anchor="middle">EXÉCUTIF</text>
+  <text x="160" y="130" font-size="10" fill="#92400e" text-anchor="middle">Président +</text>
+  <text x="160" y="143" font-size="10" fill="#92400e" text-anchor="middle">Gouvernement</text>
+  <rect x="222" y="96" width="90" height="56" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="267" y="116" font-size="11" fill="#065f46" font-weight="700" text-anchor="middle">JUDICIAIRE</text>
+  <text x="267" y="130" font-size="10" fill="#065f46" text-anchor="middle">Tribunaux</text>
+  <text x="267" y="143" font-size="10" fill="#065f46" text-anchor="middle">Fait respecter</text>
+  <rect x="30" y="168" width="260" height="44" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="160" y="186" font-size="12" fill="#4c1d95" font-weight="700" text-anchor="middle">Séparation des pouvoirs (Montesquieu)</text>
+  <text x="160" y="204" font-size="11" fill="#4c1d95" text-anchor="middle">Liberté · Égalité · Fraternité</text>
+</svg>`,
+
+  frisegm:`<svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" width="320" height="130">
+  <rect width="320" height="130" fill="#f9f9f6" rx="8"/>
+  <text x="160" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Frise chronologique — SGM</text>
+  <line x1="20" y1="55" x2="300" y2="55" stroke="#374151" stroke-width="2"/>
+  <polygon points="300,55 293,50 293,60" fill="#374151"/>
+  <line x1="40" y1="48" x2="40" y2="62" stroke="#374151" stroke-width="1.5"/>
+  <text x="40" y="74" font-size="10" fill="#374151" text-anchor="middle">1939</text>
+  <text x="40" y="86" font-size="9" fill="#dc2626" text-anchor="middle">Début SGM</text>
+  <line x1="90" y1="48" x2="90" y2="62" stroke="#374151" stroke-width="1.5"/>
+  <text x="90" y="74" font-size="10" fill="#374151" text-anchor="middle">1940</text>
+  <text x="90" y="86" font-size="9" fill="#dc2626" text-anchor="middle">Vichy</text>
+  <text x="90" y="96" font-size="9" fill="#dc2626" text-anchor="middle">Appel 18 juin</text>
+  <line x1="150" y1="48" x2="150" y2="62" stroke="#374151" stroke-width="1.5"/>
+  <text x="150" y="74" font-size="10" fill="#374151" text-anchor="middle">1942</text>
+  <text x="150" y="86" font-size="9" fill="#dc2626" text-anchor="middle">Vel d'Hiv</text>
+  <line x1="210" y1="48" x2="210" y2="62" stroke="#374151" stroke-width="1.5"/>
+  <text x="210" y="74" font-size="10" fill="#374151" text-anchor="middle">1944</text>
+  <text x="210" y="86" font-size="9" fill="#059669" text-anchor="middle">D-Day</text>
+  <line x1="270" y1="48" x2="270" y2="62" stroke="#374151" stroke-width="1.5"/>
+  <text x="270" y="74" font-size="10" fill="#374151" text-anchor="middle">1945</text>
+  <text x="270" y="86" font-size="9" fill="#059669" text-anchor="middle">Fin SGM</text>
+  <text x="270" y="96" font-size="9" fill="#059669" text-anchor="middle">Nuremberg</text>
+  <rect x="38" y="30" width="5" height="5" fill="#dc2626" rx="1"/>
+  <rect x="88" y="30" width="5" height="5" fill="#dc2626" rx="1"/>
+  <rect x="148" y="30" width="5" height="5" fill="#dc2626" rx="1"/>
+  <rect x="208" y="30" width="5" height="5" fill="#059669" rx="1"/>
+  <rect x="268" y="30" width="5" height="5" fill="#059669" rx="1"/>
+  <text x="20" y="118" font-size="10" fill="#374151">Rouge = événements tragiques · Vert = libération</text>
+</svg>`,
+
+  immunite:`<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" width="320" height="200">
+  <rect width="320" height="200" fill="#f9f9f6" rx="8"/>
+  <text x="160" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Réponse immunitaire</text>
+  <rect x="8" y="28" width="60" height="44" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="38" y="46" font-size="10" fill="#7f1d1d" font-weight="700" text-anchor="middle">ANTIGÈNE</text>
+  <text x="38" y="60" font-size="9" fill="#7f1d1d" text-anchor="middle">(virus/bactérie)</text>
+  <polygon points="72,50 80,46 80,54" fill="#374151"/>
+  <rect x="82" y="28" width="60" height="44" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="112" y="46" font-size="10" fill="#92400e" font-weight="700" text-anchor="middle">PHAGO-</text>
+  <text x="112" y="58" font-size="10" fill="#92400e" font-weight="700" text-anchor="middle">CYTOSE</text>
+  <text x="112" y="70" font-size="9" fill="#92400e" text-anchor="middle">macrophages</text>
+  <polygon points="146,50 154,46 154,54" fill="#374151"/>
+  <rect x="156" y="8" width="60" height="40" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="186" y="24" font-size="10" fill="#1e40af" font-weight="700" text-anchor="middle">Lympho B</text>
+  <text x="186" y="38" font-size="9" fill="#1e40af" text-anchor="middle">→ Anticorps</text>
+  <rect x="156" y="56" width="60" height="40" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="186" y="72" font-size="10" fill="#065f46" font-weight="700" text-anchor="middle">Lympho T</text>
+  <text x="186" y="86" font-size="9" fill="#065f46" text-anchor="middle">→ Détruit cellules</text>
+  <polygon points="220,28 228,24 228,32" fill="#374151"/>
+  <polygon points="220,76 228,72 228,80" fill="#374151"/>
+  <rect x="230" y="28" width="80" height="56" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="270" y="46" font-size="10" fill="#4c1d95" font-weight="700" text-anchor="middle">MÉMOIRE</text>
+  <text x="270" y="60" font-size="9" fill="#4c1d95" text-anchor="middle">IMMUNITAIRE</text>
+  <text x="270" y="74" font-size="9" fill="#4c1d95" text-anchor="middle">réponse rapide</text>
+  <text x="270" y="86" font-size="9" fill="#4c1d95" text-anchor="middle">au 2e contact</text>
+  <rect x="8" y="110" width="304" height="44" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="160" y="128" font-size="12" fill="#92400e" font-weight="700" text-anchor="middle">💉 VACCINATION</text>
+  <text x="160" y="146" font-size="11" fill="#92400e" text-anchor="middle">Antigène atténué → mémoire immunitaire sans maladie</text>
+  <rect x="8" y="162" width="304" height="32" rx="6" fill="#f0fdf4" stroke="#059669" stroke-width="1"/>
+  <text x="160" y="176" font-size="11" fill="#065f46" font-weight="700" text-anchor="middle">Immunité collective : si assez de vaccinés,</text>
+  <text x="160" y="190" font-size="11" fill="#065f46" text-anchor="middle">le virus ne circule plus → toute la population protégée</text>
+</svg>`,
+
+  circuit:`<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="320" height="220">
+  <rect width="320" height="220" fill="#f9f9f6" rx="8"/>
+  <text x="80" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Circuit SÉRIE</text>
+  <text x="240" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Circuit DÉRIVATION</text>
+  <line x1="16" y1="30" x2="16" y2="100" stroke="#374151" stroke-width="2"/>
+  <line x1="16" y1="30" x2="144" y2="30" stroke="#374151" stroke-width="2"/>
+  <line x1="144" y1="30" x2="144" y2="100" stroke="#374151" stroke-width="2"/>
+  <line x1="16" y1="100" x2="144" y2="100" stroke="#374151" stroke-width="2"/>
+  <circle cx="50" cy="30" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="50" y="34" font-size="12" fill="#92400e" text-anchor="middle">💡</text>
+  <circle cx="110" cy="30" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="110" y="34" font-size="12" fill="#92400e" text-anchor="middle">💡</text>
+  <rect x="62" y="90" width="36" height="20" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="80" y="104" font-size="10" fill="#1e40af" text-anchor="middle">pile</text>
+  <rect x="8" y="112" width="144" height="44" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="80" y="128" font-size="10" fill="#1e40af" font-weight="700" text-anchor="middle">I partout identique</text>
+  <text x="80" y="142" font-size="10" fill="#1e40af" text-anchor="middle">U = U₁ + U₂</text>
+  <text x="80" y="154" font-size="10" fill="#dc2626" text-anchor="middle">1 grille → tout s'éteint</text>
+  <line x1="176" y1="30" x2="176" y2="100" stroke="#374151" stroke-width="2"/>
+  <line x1="176" y1="30" x2="304" y2="30" stroke="#374151" stroke-width="2"/>
+  <line x1="304" y1="30" x2="304" y2="100" stroke="#374151" stroke-width="2"/>
+  <line x1="176" y1="100" x2="304" y2="100" stroke="#374151" stroke-width="2"/>
+  <line x1="176" y1="65" x2="304" y2="65" stroke="#374151" stroke-width="2"/>
+  <circle cx="210" cy="30" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="210" y="34" font-size="12" fill="#92400e" text-anchor="middle">💡</text>
+  <circle cx="210" cy="65" r="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="210" y="69" font-size="12" fill="#92400e" text-anchor="middle">💡</text>
+  <rect x="252" y="56" width="36" height="18" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="270" y="69" font-size="10" fill="#1e40af" text-anchor="middle">pile</text>
+  <rect x="168" y="112" width="144" height="44" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+  <text x="240" y="128" font-size="10" fill="#065f46" font-weight="700" text-anchor="middle">U partout identique</text>
+  <text x="240" y="142" font-size="10" fill="#065f46" text-anchor="middle">I = I₁ + I₂</text>
+  <text x="240" y="154" font-size="10" fill="#059669" text-anchor="middle">1 grille → autres fonctionnent</text>
+  <rect x="8" y="164" width="304" height="50" rx="8" fill="#1a1a1a"/>
+  <text x="160" y="182" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">Loi d'Ohm : U = R × I</text>
+  <text x="160" y="198" font-size="11" fill="#d1d5db" text-anchor="middle">Volts = Ohms × Ampères     Énergie : E = P × t</text>
+  <text x="160" y="210" font-size="11" fill="#d1d5db" text-anchor="middle">Joules = Watts × secondes     1 kWh = 3 600 000 J</text>
+</svg>`,
+
+  genetique:`<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" width="320" height="210">
+  <rect width="320" height="210" fill="#f9f9f6" rx="8"/>
+  <text x="160" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Grille de Punnett — Aa × Aa</text>
+  <text x="100" y="36" font-size="13" fill="#1e40af" font-weight="700" text-anchor="middle">Parent 1 →</text>
+  <text x="190" y="50" font-size="13" fill="#1e40af" font-weight="700" text-anchor="middle">A</text>
+  <text x="250" y="50" font-size="13" fill="#3b82f6" font-weight="700" text-anchor="middle">a</text>
+  <text x="128" y="85" font-size="13" fill="#059669" font-weight="700" text-anchor="middle">A</text>
+  <text x="128" y="135" font-size="13" fill="#6ee7b7" font-weight="700" text-anchor="middle">a</text>
+  <text x="60" y="78" font-size="12" fill="#065f46" font-weight="700" text-anchor="middle">Parent 2</text>
+  <text x="60" y="92" font-size="12" fill="#065f46" text-anchor="middle">↓</text>
+  <rect x="145" y="56" width="60" height="54" rx="4" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <rect x="213" y="56" width="60" height="54" rx="4" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <rect x="145" y="118" width="60" height="54" rx="4" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <rect x="213" y="118" width="60" height="54" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="175" y="80" font-size="14" fill="#065f46" font-weight="700" text-anchor="middle">AA</text>
+  <text x="175" y="96" font-size="10" fill="#065f46" text-anchor="middle">dominant</text>
+  <text x="243" y="80" font-size="14" fill="#065f46" font-weight="700" text-anchor="middle">Aa</text>
+  <text x="243" y="96" font-size="10" fill="#065f46" text-anchor="middle">dominant</text>
+  <text x="175" y="142" font-size="14" fill="#065f46" font-weight="700" text-anchor="middle">Aa</text>
+  <text x="175" y="158" font-size="10" fill="#065f46" text-anchor="middle">dominant</text>
+  <text x="243" y="142" font-size="14" fill="#92400e" font-weight="700" text-anchor="middle">aa</text>
+  <text x="243" y="158" font-size="10" fill="#92400e" text-anchor="middle">récessif</text>
+  <rect x="8" y="180" width="304" height="24" rx="6" fill="#1a1a1a"/>
+  <text x="160" y="196" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">3/4 phénotype dominant · 1/4 phénotype récessif</text>
+</svg>`,
+
+  tectonique:`<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" width="320" height="200">
+  <rect width="320" height="200" fill="#f9f9f6" rx="8"/>
+  <text x="160" y="16" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Les 3 types de frontières</text>
+  <rect x="6" y="24" width="95" height="90" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="53" y="40" font-size="11" fill="#92400e" font-weight="700" text-anchor="middle">DIVERGENTE</text>
+  <rect x="16" y="54" width="17" height="40" rx="3" fill="#a78bfa"/>
+  <rect x="68" y="54" width="17" height="40" rx="3" fill="#a78bfa"/>
+  <polygon points="40,44 53,34 66,44" fill="#ef4444"/>
+  <polygon points="15,68 8,62 8,74" fill="#374151"/>
+  <polygon points="86,68 93,62 93,74" fill="#374151"/>
+  <text x="53" y="75" font-size="9" fill="#92400e" text-anchor="middle">▲ volcan</text>
+  <text x="53" y="90" font-size="9" fill="#92400e" text-anchor="middle">dorsale</text>
+  <text x="53" y="103" font-size="9" fill="#92400e" text-anchor="middle">plaques s'écartent</text>
+  <rect x="112" y="24" width="96" height="90" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="160" y="40" font-size="11" fill="#991b1b" font-weight="700" text-anchor="middle">CONVERGENTE</text>
+  <rect x="122" y="54" width="17" height="40" rx="3" fill="#a78bfa"/>
+  <rect x="172" y="44" width="17" height="50" rx="3" fill="#7c3aed"/>
+  <polygon points="155,68 148,62 148,74" fill="#374151"/>
+  <polygon points="193,68 200,62 200,74" fill="#374151"/>
+  <text x="160" y="82" font-size="9" fill="#991b1b" text-anchor="middle">subduction</text>
+  <text x="160" y="95" font-size="9" fill="#991b1b" text-anchor="middle">→ montagnes</text>
+  <text x="160" y="107" font-size="9" fill="#991b1b" text-anchor="middle">séismes, volcans</text>
+  <rect x="219" y="24" width="95" height="90" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="266" y="40" font-size="11" fill="#065f46" font-weight="700" text-anchor="middle">COULISSANTE</text>
+  <rect x="230" y="54" width="16" height="40" rx="3" fill="#a78bfa"/>
+  <rect x="268" y="54" width="16" height="40" rx="3" fill="#a78bfa"/>
+  <polygon points="248,48 248,60 242,54" fill="#374151"/>
+  <polygon points="286,68 286,80 292,74" fill="#374151"/>
+  <text x="266" y="80" font-size="9" fill="#065f46" text-anchor="middle">glissement</text>
+  <text x="266" y="93" font-size="9" fill="#065f46" text-anchor="middle">latéral</text>
+  <text x="266" y="106" font-size="9" fill="#065f46" text-anchor="middle">→ séismes</text>
+  <rect x="6" y="124" width="308" height="66" rx="8" fill="#fff" stroke="#e0e0d8" stroke-width="1"/>
+  <text x="160" y="140" font-size="12" fill="#1a1a1a" font-weight="700" text-anchor="middle">Séisme : foyer et épicentre</text>
+  <ellipse cx="160" cy="182" rx="80" ry="5" fill="#92400e" opacity="0.3"/>
+  <circle cx="160" cy="166" r="6" fill="#dc2626"/>
+  <text x="172" y="170" font-size="10" fill="#dc2626">foyer</text>
+  <circle cx="160" cy="148" r="5" fill="#f59e0b"/>
+  <text x="172" y="152" font-size="10" fill="#d97706">épicentre</text>
+  <line x1="160" y1="148" x2="160" y2="166" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="100" y1="148" x2="220" y2="148" stroke="#6b7280" stroke-width="1.5"/>
+</svg>`,
+
+  forces:`<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" width="320" height="200">
+  <rect width="320" height="200" fill="#f9f9f6" rx="8"/>
+  <text x="160" y="18" font-size="13" fill="#1a1a1a" font-weight="700" text-anchor="middle">Poids et forces</text>
+  <rect x="110" y="60" width="100" height="60" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+  <text x="160" y="93" font-size="13" fill="#1e40af" font-weight="700" text-anchor="middle">OBJET</text>
+  <text x="160" y="108" font-size="11" fill="#1e40af" text-anchor="middle">masse m (kg)</text>
+  <line x1="160" y1="120" x2="160" y2="160" stroke="#dc2626" stroke-width="3" marker-end="url(#rarr)"/>
+  <text x="170" y="148" font-size="12" fill="#dc2626" font-weight="700">P = m × g</text>
+  <text x="170" y="162" font-size="11" fill="#dc2626">(Poids en N)</text>
+  <line x1="160" y1="60" x2="160" y2="26" stroke="#059669" stroke-width="3" marker-end="url(#garr)"/>
+  <text x="170" y="46" font-size="12" fill="#059669" font-weight="700">Réaction</text>
+  <text x="170" y="58" font-size="11" fill="#059669">du support</text>
+  <defs>
+    <marker id="rarr" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 z" fill="#dc2626"/></marker>
+    <marker id="garr" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L0,10 L10,5 z" fill="#059669"/></marker>
+  </defs>
+  <line x1="30" y1="120" x2="100" y2="120" stroke="#e0e0d8" stroke-width="1"/>
+  <line x1="220" y1="120" x2="290" y2="120" stroke="#e0e0d8" stroke-width="1"/>
+  <rect x="6" y="166" width="148" height="28" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <text x="80" y="180" font-size="11" fill="#92400e" font-weight="700" text-anchor="middle">g Terre = 9,8 N/kg</text>
+  <text x="80" y="190" font-size="10" fill="#92400e" text-anchor="middle">Masse ≠ Poids !</text>
+  <rect x="166" y="166" width="148" height="28" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+  <text x="240" y="180" font-size="11" fill="#065f46" font-weight="700" text-anchor="middle">g Lune = 1,6 N/kg</text>
+  <text x="240" y="190" font-size="10" fill="#065f46" text-anchor="middle">Masse constante partout</text>
+</svg>`
+};
+
 const FICHES = {
 0:[
-  {title:"Théorème de Pythagore",content:`<p>Dans un triangle <strong>rectangle en C</strong> : <strong>AB² = AC² + BC²</strong> (AB = hypoténuse, côté opposé à l'angle droit).</p>
-  <div class="formula-box">AB² = AC² + BC²<br>→ AB = √(AC² + BC²)</div>
+  {title:"Théorème de Pythagore",content:`<p>Dans un triangle <strong>rectangle en C</strong> : <strong>AB² = AC² + BC²</strong> (AB = hypoténuse).</p>
+  <div class="formula-box">AB² = AC² + BC²  →  AB = √(AC² + BC²)</div>
   <p><strong>Réciproque :</strong> Si AB² = AC² + BC², alors le triangle est rectangle en C.</p>
+  <div class="schema-wrap">${SVG.pythagore}<div class="schema-label">Triangle rectangle — identifier l'hypoténuse en face de l'angle droit</div></div>
   <div class="tip-box">💡 Méthode : 1) Identifier l'hypoténuse · 2) Poser l'égalité · 3) Calculer · 4) Conclure</div>`},
-  {title:"Théorème de Thalès",content:`<p>Si D est sur [AB] et E est sur [AC] avec <strong>DE // BC</strong>, alors :</p>
+  {title:"Théorème de Thalès",content:`<p>Si D est sur [AB] et E est sur [AC] avec <strong>DE // BC</strong> :</p>
   <div class="formula-box">AD/AB = AE/AC = DE/BC</div>
-  <p>On utilise une <strong>multiplication en croix</strong> pour trouver la valeur inconnue.</p>
+  <div class="schema-wrap">${SVG.thales}<div class="schema-label">DE // BC → les rapports de segments sont égaux</div></div>
   <div class="tip-box">💡 Méthode : 1) Vérifier le parallélisme · 2) Nommer les triangles · 3) Poser les rapports · 4) Multiplier en croix</div>`},
-  {title:"Trigonométrie dans le triangle rectangle",content:`<p>Pour un angle aigu <strong>α</strong> dans un triangle rectangle :</p>
-  <div class="formula-box">cos α = côté adjacent / hypoténuse<br>sin α = côté opposé / hypoténuse<br>tan α = côté opposé / côté adjacent</div>
-  <p><strong>Moyen mémo : SOH-CAH-TOA</strong></p>
-  <div class="tip-box">💡 Identifier l'angle → nommer les côtés → choisir la bonne formule → calculer</div>`},
-  {title:"Aires et volumes à connaître",content:`<table class="mini-table"><tr><th>Forme</th><th>Formule</th></tr>
+  {title:"Trigonométrie dans le triangle rectangle",content:`<div class="formula-box">cos α = adjacent / hypoténuse<br>sin α = opposé / hypoténuse<br>tan α = opposé / adjacent</div>
+  <div class="schema-wrap">${SVG.trigo}<div class="schema-label">SOH-CAH-TOA — identifier l'angle puis nommer les côtés</div></div>
+  <div class="tip-box">💡 Astuce : identifier α → nommer adjacent/opposé/hypoténuse → choisir la bonne formule → calculer</div>`},
+  {title:"Aires et volumes à connaître",content:`<div class="schema-wrap">${SVG.volumes}<div class="schema-label">Formules des volumes les plus fréquents au brevet</div></div>
+  <table class="mini-table"><tr><th>Forme</th><th>Formule</th></tr>
   <tr><td>Disque</td><td>π × r²</td></tr>
-  <tr><td>Cylindre (volume)</td><td>π × r² × h</td></tr>
-  <tr><td>Cône (volume)</td><td>(1/3) × π × r² × h</td></tr>
-  <tr><td>Boule (volume)</td><td>(4/3) × π × r³</td></tr>
-  <tr><td>Pyramide (volume)</td><td>(1/3) × base × hauteur</td></tr></table>`},
-  {title:"Fonctions affines",content:`<p>Une fonction affine s'écrit <strong>f(x) = ax + b</strong></p>
-  <ul><li><strong>a</strong> = coefficient directeur (pente)</li><li><strong>b</strong> = ordonnée à l'origine (valeur en x = 0)</li><li>a > 0 → croissante · a < 0 → décroissante · a = 0 → constante</li></ul>
-  <div class="formula-box">Pente a = (y2 − y1) / (x2 − x1)</div>`},
-  {title:"Calcul littéral & Équations",content:`<p><strong>Identités remarquables :</strong></p>
+  <tr><td>Cylindre</td><td>π × r² × h</td></tr>
+  <tr><td>Cône</td><td>(1/3) × π × r² × h</td></tr>
+  <tr><td>Boule</td><td>(4/3) × π × r³</td></tr>
+  <tr><td>Pyramide</td><td>(1/3) × base × hauteur</td></tr></table>`},
+  {title:"Fonctions affines",content:`<p>Une fonction affine s'écrit <strong>f(x) = ax + b</strong> — représentée par une droite.</p>
+  <div class="schema-wrap">${SVG.fonctions}<div class="schema-label">Droite croissante (a > 0) et décroissante (a < 0)</div></div>
+  <div class="formula-box">Pente a = (y2 − y1) / (x2 − x1)     b = ordonnée à l'origine</div>`},
+  {title:"Calcul littéral & Équations",content:`<p><strong>Identités remarquables à connaître par cœur :</strong></p>
   <div class="formula-box">(a+b)² = a² + 2ab + b²<br>(a−b)² = a² − 2ab + b²<br>(a+b)(a−b) = a² − b²</div>
-  <p><strong>Résoudre une équation du 1er degré :</strong> isoler x en effectuant les mêmes opérations des deux côtés.</p>
-  <div class="tip-box">💡 Ex : 3x + 7 = 22 → 3x = 15 → x = 5</div>`},
-  {title:"Statistiques & Probabilités",content:`<p><strong>Statistiques :</strong></p>
-  <ul><li><strong>Moyenne</strong> = somme des valeurs / nombre de valeurs</li><li><strong>Médiane</strong> = valeur centrale d'une série ordonnée</li><li><strong>Étendue</strong> = valeur max − valeur min</li></ul>
-  <div class="formula-box">P(A) = cas favorables / cas possibles<br>0 ≤ P(A) ≤ 1 · P(A) + P(Ā) = 1</div>`},
+  <p><strong>Résoudre une équation :</strong> isoler x en effectuant les mêmes opérations des deux côtés.</p>
+  <div class="tip-box">💡 Ex : 3x + 7 = 22 → 3x = 15 → x = 5<br>Ex : 2(x+3) = x+9 → 2x+6 = x+9 → x = 3</div>`},
+  {title:"Statistiques & Probabilités",content:`<p><strong>Statistiques :</strong> Moyenne = somme/nombre · Médiane = valeur centrale · Étendue = max − min</p>
+  <div class="schema-wrap">${SVG.probas}<div class="schema-label">Probabilités : entre 0 (impossible) et 1 (certain)</div></div>`},
   {title:"Automatismes — pièges classiques",content:`<table class="mini-table"><tr><th>Notion</th><th>À retenir</th></tr>
-  <tr><td>Fractions</td><td>Même dénominateur pour additionner</td></tr>
+  <tr><td>Fractions</td><td>Même dénominateur pour additionner : 3/4 + 2/3 = 9/12 + 8/12</td></tr>
   <tr><td>Pourcentages</td><td>+t% → ×(1+t/100) · −t% → ×(1−t/100)</td></tr>
   <tr><td>Puissances</td><td>a⁰ = 1 · a⁻ⁿ = 1/aⁿ</td></tr>
   <tr><td>Notation scientifique</td><td>0,00045 = 4,5 × 10⁻⁴</td></tr>
@@ -144,34 +521,29 @@ const FICHES = {
   <tr><td>Médiane (nb pair)</td><td>Moyenne des 2 valeurs centrales</td></tr></table>`}
 ],
 1:[
-  {title:"La Seconde Guerre Mondiale (1939-1945)",content:`<table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
-  <tr><td>1er sept. 1939</td><td>Invasion de la Pologne → début de la SGM</td></tr>
-  <tr><td>Juin 1940</td><td>Défaite de la France · Appel du 18 juin (De Gaulle) · Régime de Vichy (Pétain)</td></tr>
-  <tr><td>Déc. 1941</td><td>Pearl Harbor → entrée en guerre des États-Unis</td></tr>
-  <tr><td>16-17 juil. 1942</td><td>Rafle du Vel d'Hiv (13 000 Juifs arrêtés par la police française)</td></tr>
-  <tr><td>6 juin 1944</td><td>Débarquement en Normandie (D-Day)</td></tr>
-  <tr><td>8 mai 1945</td><td>Capitulation allemande · Fin de la SGM en Europe</td></tr></table>
-  <div class="tip-box">⚠️ Notions clés : Régime de Vichy (collaborationnisme, antisémitisme) · Shoah (génocide ~6 millions de Juifs) · Résistance (intérieure + France Libre) · Procès de Nuremberg (crimes contre l'humanité)</div>`},
-  {title:"La Guerre froide (1947-1991)",content:`<p><strong>Deux blocs opposés :</strong></p>
-  <ul><li>🇺🇸 <strong>Bloc occidental</strong> : USA, capitalisme, démocratie, OTAN (1949)</li><li>🇷🇺 <strong>Bloc oriental</strong> : URSS, communisme, Pacte de Varsovie (1955)</li></ul>
+  {title:"La Seconde Guerre Mondiale (1939-1945)",content:`<div class="schema-wrap">${SVG.frisegm}<div class="schema-label">Les 5 dates clés de la SGM à connaître absolument</div></div>
+  <div class="tip-box">⚠️ Notions clés : Régime de Vichy (collaboration + antisémitisme) · Shoah (~6 millions de Juifs assassinés) · Résistance (maquis + France Libre) · Procès de Nuremberg 1945 (crimes contre l'humanité)</div>
+  <table class="mini-table"><tr><th>Acteur</th><th>Rôle</th></tr>
+  <tr><td>Pétain</td><td>Régime de Vichy, collaboration avec l'Allemagne nazie</td></tr>
+  <tr><td>De Gaulle</td><td>Appel du 18 juin, France Libre depuis Londres</td></tr>
+  <tr><td>Résistance</td><td>Maquis, réseaux secrets, sabotages</td></tr></table>`},
+  {title:"La Guerre froide (1947-1991)",content:`<div class="schema-wrap">${SVG.guerrefroide}<div class="schema-label">Deux blocs antagonistes — USA vs URSS</div></div>
   <table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
-  <tr><td>1947</td><td>Discours Truman · Plan Marshall · Début guerre froide</td></tr>
+  <tr><td>1947</td><td>Discours Truman · Plan Marshall</td></tr>
   <tr><td>1961</td><td>Construction du Mur de Berlin</td></tr>
   <tr><td>1962</td><td>Crise des missiles de Cuba (pic de tension)</td></tr>
-  <tr><td>1989</td><td>Chute du Mur de Berlin</td></tr>
-  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>
-  <div class="tip-box">💡 Guerre froide ≠ guerre directe. Arme principale : dissuasion nucléaire (équilibre de la terreur). Affrontements indirects : Corée, Vietnam.</div>`},
+  <tr><td>1989</td><td>Chute du Mur de Berlin → fin de la guerre froide</td></tr>
+  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>`},
   {title:"Le Front Populaire (1936)",content:`<p><strong>Contexte :</strong> crise économique des années 30, montée des fascismes en Europe.</p>
-  <p><strong>1936 :</strong> victoire électorale coalition Socialistes + Communistes + Radicaux → <strong>Léon Blum</strong> Premier Ministre.</p>
+  <p><strong>1936 :</strong> victoire de la coalition Socialistes + Communistes + Radicaux → <strong>Léon Blum</strong> Premier Ministre.</p>
   <p><strong>Accords Matignon (juin 1936) :</strong></p>
-  <ul><li>Semaine de <strong>40 heures</strong></li><li><strong>2 semaines</strong> de congés payés</li><li>Liberté syndicale</li><li>Augmentation des salaires</li></ul>`},
-  {title:"Géographie : Métropolisation & Aires urbaines",content:`<p><strong>Vocabulaire essentiel :</strong></p>
-  <ul><li><strong>Métropolisation</strong> : concentration des hommes, activités et richesses dans les grandes villes</li><li><strong>Aire urbaine</strong> : ville-centre + banlieues + communes périurbaines (liées par les trajets domicile-travail)</li><li><strong>Périurbain</strong> : zone entre banlieue et espace rural, forte croissance depuis les années 70</li><li><strong>Étalement urbain</strong> : expansion spatiale des villes</li></ul>
-  <p><strong>Hiérarchie en France :</strong><br>Paris (mondiale) → Lyon, Marseille, Bordeaux… (régionales) → villes moyennes → espaces ruraux</p>
-  <div class="tip-box">💡 Les métropoles concentrent emplois qualifiés, universités, hôpitaux, transports internationaux.</div>`},
-  {title:"EMC : La démocratie représentative",content:`<p><strong>Les 3 pouvoirs (séparation des pouvoirs — Montesquieu) :</strong></p>
-  <ul><li>⚖️ <strong>Législatif</strong> : Parlement = Assemblée Nationale (577 députés) + Sénat (348 sénateurs) → vote les lois</li><li>🏛️ <strong>Exécutif</strong> : Président + gouvernement → applique les lois</li><li>🔨 <strong>Judiciaire</strong> : tribunaux → fait respecter les lois</li></ul>
-  <div class="formula-box">Devise : Liberté · Égalité · Fraternité<br>Suffrage universel direct : tous les citoyens majeurs votent<br>Président élu pour 5 ans au suffrage universel direct</div>`},
+  <ul><li>Semaine de <strong>40 heures</strong></li><li><strong>2 semaines</strong> de congés payés</li><li>Liberté syndicale · Hausse des salaires</li></ul>
+  <div class="tip-box">💡 À retenir : Front Populaire = première fois que des travailleurs partent en vacances en France.</div>`},
+  {title:"Géographie : Métropolisation & Aires urbaines",content:`<div class="schema-wrap">${SVG.aireurb}<div class="schema-label">Organisation concentrique d'une aire urbaine</div></div>
+  <ul><li><strong>Métropolisation</strong> : concentration des hommes, activités et richesses dans les grandes villes</li><li><strong>Périurbain</strong> : entre banlieue et espace rural, forte croissance depuis les années 70</li><li><strong>Étalement urbain</strong> : expansion spatiale des villes vers la périphérie</li></ul>
+  <p><strong>Hiérarchie en France :</strong> Paris (mondiale) → Lyon, Marseille… (régionales) → villes moyennes</p>`},
+  {title:"EMC : La démocratie représentative",content:`<div class="schema-wrap">${SVG.democratie}<div class="schema-label">Séparation des 3 pouvoirs — principe fondamental de la démocratie</div></div>
+  <ul><li><strong>577 députés</strong> à l'Assemblée Nationale → votent les lois, contrôlent le gouvernement</li><li><strong>Président</strong> élu pour 5 ans au suffrage universel direct</li><li><strong>Devise :</strong> Liberté · Égalité · Fraternité</li></ul>`},
   {title:"Chronologie — repères absolus",content:`<table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
   <tr><td>1914–1918</td><td>Première Guerre Mondiale</td></tr>
   <tr><td>1936</td><td>Front Populaire — Léon Blum</td></tr>
@@ -184,32 +556,24 @@ const FICHES = {
   <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>`}
 ],
 2:[
-  {title:"Génétique — ADN, chromosomes, allèles",content:`<ul><li><strong>ADN</strong> : molécule porteuse de l'information génétique, dans le noyau des cellules</li><li><strong>Chromosome</strong> : structure contenant l'ADN · les humains ont <strong>46 chromosomes</strong> (23 paires)</li><li><strong>Gène</strong> : portion d'ADN codant pour un caractère</li><li><strong>Allèle</strong> : version d'un même gène</li><li><strong>Génotype</strong> : composition génétique · <strong>Phénotype</strong> : caractère observable</li></ul>
-  <div class="formula-box">Allèle dominant (A) : s'exprime même en 1 exemplaire<br>Allèle récessif (a) : s'exprime seulement si présent en 2 exemplaires (aa)<br>Grille de Punnett Aa × Aa → 3/4 dominant, 1/4 récessif</div>`},
-  {title:"Système immunitaire & Vaccins",content:`<p><strong>Étapes de la réponse immunitaire :</strong></p>
-  <ol style="padding-left:1.4rem;font-size:14px;line-height:1.9;color:#333">
-  <li>Barrières naturelles : peau, muqueuses</li>
-  <li>Réaction inflammatoire : phagocytose par les macrophages</li>
-  <li>Immunité spécifique : lymphocytes B (anticorps) + lymphocytes T (destruction cellules infectées)</li>
-  <li>Mémoire immunitaire : réponse + rapide au 2e contact</li></ol>
-  <div class="tip-box">💡 Vaccination : antigène atténué → mémoire immunitaire → protection lors d'un futur contact. Immunité collective = si assez de vaccinés, le virus ne circule plus.</div>`},
-  {title:"Forces & Gravitation",content:`<p>Une force se caractérise par : point d'application, direction, sens, valeur (en Newtons).</p>
-  <div class="formula-box">Poids : P = m × g<br>g Terre = 9,8 N/kg · g Lune ≈ 1,6 N/kg · g Mars ≈ 3,7 N/kg<br>Équilibre : somme des forces = 0</div>
-  <p><strong>Masse (kg)</strong> = constante, ne change pas selon le lieu.<br><strong>Poids (N)</strong> = varie selon la gravité du lieu.</p>`},
-  {title:"Électricité & Énergie",content:`<p><strong>Circuits :</strong></p>
-  <ul><li><strong>Série</strong> : même intensité partout · tensions s'additionnent · si 1 élément grille → tout s'éteint</li><li><strong>Dérivation</strong> : même tension · intensités s'additionnent · si 1 élément grille → les autres fonctionnent</li></ul>
-  <div class="formula-box">Loi d'Ohm : U = R × I (Volts = Ohms × Ampères)<br>Énergie : E = P × t (Joules = Watts × secondes)<br>1 kWh = kW × h = 3 600 000 J</div>`},
+  {title:"Génétique — ADN, chromosomes, allèles",content:`<p><strong>Vocabulaire :</strong> ADN (noyau, 46 chromosomes) · Gène (portion ADN) · Allèle (version du gène) · Génotype / Phénotype</p>
+  <div class="schema-wrap">${SVG.genetique}<div class="schema-label">Grille de Punnett Aa × Aa → 3 dominants pour 1 récessif</div></div>
+  <div class="formula-box">Allèle dominant A : s'exprime en 1 exemplaire (AA ou Aa)<br>Allèle récessif a : s'exprime seulement en 2 exemplaires (aa)</div>`},
+  {title:"Système immunitaire & Vaccins",content:`<div class="schema-wrap">${SVG.immunite}<div class="schema-label">De l'antigène à la mémoire immunitaire — principe de la vaccination</div></div>
+  <div class="formula-box">Anticorps = protéine spécifique d'un antigène (produite par lymphocytes B)<br>Vaccin = antigène atténué → mémoire → protection future</div>`},
+  {title:"Forces & Gravitation",content:`<div class="schema-wrap">${SVG.forces}<div class="schema-label">Poids et réaction du support — équilibre d'un objet au repos</div></div>
+  <div class="formula-box">P = m × g   (Newtons = kg × N/kg)<br>g Terre = 9,8 N/kg · g Lune = 1,6 N/kg<br>Masse (kg) = constante · Poids (N) = varie selon le lieu</div>`},
+  {title:"Électricité & Énergie",content:`<div class="schema-wrap">${SVG.circuit}<div class="schema-label">Circuits série vs dérivation — loi d'Ohm et énergie électrique</div></div>
+  <div class="formula-box">Loi d'Ohm : U = R × I  (Volts = Ohms × Ampères)<br>Énergie : E = P × t  (Joules = Watts × secondes)<br>1 kWh = kW × h = 3 600 000 J</div>`},
   {title:"Réactions chimiques & pH",content:`<div class="formula-box">Loi de Lavoisier : masse réactifs = masse produits<br>"Rien ne se perd, rien ne se crée, tout se transforme"</div>
   <table class="mini-table"><tr><th>pH</th><th>Nature</th><th>Exemple</th></tr>
-  <tr><td>pH &lt; 7</td><td>Acide</td><td>Jus de citron, vinaigre</td></tr>
+  <tr><td>pH &lt; 7</td><td>Acide</td><td>Citron, vinaigre</td></tr>
   <tr><td>pH = 7</td><td>Neutre</td><td>Eau pure</td></tr>
-  <tr><td>pH &gt; 7</td><td>Basique</td><td>Savon, eau de Javel</td></tr></table>`},
-  {title:"Tectonique des plaques",content:`<p>La Terre est formée de <strong>plaques lithosphériques</strong> en mouvement (quelques cm/an).</p>
-  <table class="mini-table"><tr><th>Frontière</th><th>Mouvement</th><th>Conséquences</th></tr>
-  <tr><td>Divergente</td><td>Plaques s'écartent</td><td>Dorsales, volcanisme</td></tr>
-  <tr><td>Convergente</td><td>Plaques se rapprochent</td><td>Subduction, séismes, volcans</td></tr>
-  <tr><td>Coulissante</td><td>Plaques glissent</td><td>Séismes (ex: San Andreas)</td></tr></table>
-  <div class="tip-box">💡 Séisme : foyer = origine en profondeur · épicentre = point en surface à la verticale du foyer.</div>`}
+  <tr><td>pH &gt; 7</td><td>Basique</td><td>Savon, eau de Javel</td></tr></table>
+  <div class="tip-box">💡 Indicateur coloré = permet de mesurer le pH d'une solution (change de couleur selon l'acidité).</div>`},
+  {title:"Tectonique des plaques",content:`<div class="schema-wrap">${SVG.tectonique}<div class="schema-label">Les 3 types de frontières et la structure d'un séisme</div></div>
+  <p>La Terre est formée de <strong>plaques lithosphériques</strong> en mouvement (quelques cm/an).</p>
+  <div class="tip-box">💡 Séisme : foyer = origine en profondeur · épicentre = point en surface à la verticale du foyer · ondes sismiques = ce qui cause les dégâts.</div>`}
 ]
 };
 
@@ -282,126 +646,48 @@ const QUESTIONS = {
 ]
 };
 
-let curSubj=0, curMode='fiches', curQ=0;
-let answered={}, scores={0:{done:0,good:0},1:{done:0,good:0},2:{done:0,good:0}};
+let curSubj=0,curMode='fiches',curQ=0;
+let answered={},scores={0:{done:0,good:0},1:{done:0,good:0},2:{done:0,good:0}};
 let ficheOpen={};
-
 const COLORS=['kb-blue','kb-amber','kb-green'];
 const LABELS=['Mathématiques','Histoire-Géo & EMC','Sciences'];
 
-function switchSubject(s){
-  curSubj=s; curQ=0;
-  document.querySelectorAll('.stab').forEach((el,i)=>el.classList.toggle('active',i===s));
-  render();
-}
-function switchMode(m){
-  curMode=m;
-  document.getElementById('mb0').classList.toggle('active',m==='fiches');
-  document.getElementById('mb1').classList.toggle('active',m==='exos');
-  curQ=0; render();
-}
-function render(){
-  curMode==='fiches' ? renderFiches() : renderExos();
-}
+function switchSubject(s){curSubj=s;curQ=0;document.querySelectorAll('.stab').forEach((el,i)=>el.classList.toggle('active',i===s));render();}
+function switchMode(m){curMode=m;document.getElementById('mb0').classList.toggle('active',m==='fiches');document.getElementById('mb1').classList.toggle('active',m==='exos');curQ=0;render();}
+function render(){curMode==='fiches'?renderFiches():renderExos();}
 
 function renderFiches(){
   const fiches=FICHES[curSubj];
   let html=`<div class="section-title">${LABELS[curSubj]} — ${fiches.length} fiches de cours</div>`;
   fiches.forEach((f,i)=>{
-    const key=curSubj+'_'+i;
-    const isOpen=ficheOpen[key];
-    html+=`<div class="fiche">
-      <div class="fiche-header" onclick="toggleFiche('${key}')">
-        <h3><span class="tag ${COLORS[curSubj]}">${i+1}</span>${f.title}</h3>
-        <span class="chevron${isOpen?' open':''}">▼</span>
-      </div>
-      <div class="fiche-body${isOpen?' open':''}">${f.content}</div>
-    </div>`;
+    const key=curSubj+'_'+i,isOpen=ficheOpen[key];
+    html+=`<div class="fiche"><div class="fiche-header" onclick="toggleFiche('${key}')"><h3><span class="tag ${COLORS[curSubj]}">${i+1}</span>${f.title}</h3><span class="chevron${isOpen?' open':''}">▼</span></div><div class="fiche-body${isOpen?' open':''}">${f.content}</div></div>`;
   });
   html+=`<button class="btn btn-primary btn-full" onclick="switchMode('exos')">Passer aux exercices →</button>`;
   document.getElementById('main-area').innerHTML=html;
 }
 
-function toggleFiche(key){
-  ficheOpen[key]=!ficheOpen[key];
-  renderFiches();
-}
+function toggleFiche(key){ficheOpen[key]=!ficheOpen[key];renderFiches();}
 
 function renderExos(){
-  const qs=QUESTIONS[curSubj];
-  const s=scores[curSubj];
+  const qs=QUESTIONS[curSubj],s=scores[curSubj];
   if(s.done===20){
     const pct=Math.round(s.good/20*100);
     const msg=pct>=80?'Excellent ! Tu es prêt(e) pour le brevet !':pct>=60?'Bien ! Revois tes erreurs pour progresser.':'Continue à réviser, tu vas y arriver !';
     const emoji=pct>=80?'🎉':pct>=60?'👍':'💪';
-    document.getElementById('main-area').innerHTML=`<div class="final">
-      <div style="font-size:48px">${emoji}</div>
-      <div class="final-score">${s.good}/20</div>
-      <div class="final-msg">${msg} (${pct}%)</div>
-      <div class="grid2">
-        <div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">✓ Correctes</div></div>
-        <div class="stat"><div class="stat-n" style="color:#dc2626">${20-s.good}</div><div class="stat-l">✗ Erreurs</div></div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button class="btn" onclick="resetExos()">🔄 Recommencer</button>
-        <button class="btn btn-primary" onclick="switchMode('fiches')">📖 Revoir les fiches</button>
-      </div>
-    </div>`;
+    document.getElementById('main-area').innerHTML=`<div class="final"><div style="font-size:48px">${emoji}</div><div class="final-score">${s.good}/20</div><div class="final-msg">${msg} (${pct}%)</div><div class="grid2"><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">✓ Correctes</div></div><div class="stat"><div class="stat-n" style="color:#dc2626">${20-s.good}</div><div class="stat-l">✗ Erreurs</div></div></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" onclick="resetExos()">🔄 Recommencer</button><button class="btn btn-primary" onclick="switchMode('fiches')">📖 Revoir les fiches</button></div></div>`;
     return;
   }
-  const pct=Math.round(s.done/20*100);
-  const q=qs[curQ];
-  const key=curSubj+'_'+curQ;
-  const isAns=answered[key]!==undefined;
-  let optsHtml=q.opts.map((o,i)=>{
-    let cls='option';
-    if(isAns){if(i===q.ans)cls+=' correct';else if(i===answered[key]&&i!==q.ans)cls+=' wrong';}
-    return `<button class="${cls}"${isAns?' disabled':''} onclick="doAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`;
-  }).join('');
+  const pct=Math.round(s.done/20*100),q=qs[curQ],key=curSubj+'_'+curQ,isAns=answered[key]!==undefined;
+  let optsHtml=q.opts.map((o,i)=>{let cls='option';if(isAns){if(i===q.ans)cls+=' correct';else if(i===answered[key]&&i!==q.ans)cls+=' wrong';}return`<button class="${cls}"${isAns?' disabled':''} onclick="doAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`;}).join('');
   const fb=isAns?`<div class="feedback ${answered[key]===q.ans?'correct':'wrong'}"><strong>${answered[key]===q.ans?'✓ Bonne réponse !':'✗ Mauvaise réponse.'}</strong> ${q.exp}</div>`:'';
-  document.getElementById('main-area').innerHTML=`
-    <div class="stats">
-      <div class="stat"><div class="stat-n">${s.done}</div><div class="stat-l">Répondues</div></div>
-      <div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">Correctes</div></div>
-      <div class="stat"><div class="stat-n">${s.done?Math.round(s.good/s.done*100):0}%</div><div class="stat-l">Score</div></div>
-      <div class="stat"><div class="stat-n">${20-s.done}</div><div class="stat-l">Restantes</div></div>
-    </div>
-    <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
-    <div class="question-card">
-      <div class="q-meta">
-        <span class="q-num-label">Question ${curQ+1} / 20</span>
-        <span class="tag ${COLORS[curSubj]}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">${LABELS[curSubj]}</span>
-      </div>
-      <div class="q-text">${q.q}</div>
-      ${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}
-      <div class="options">${optsHtml}</div>${fb}
-    </div>
-    <div class="nav">
-      <button class="btn" onclick="prevQ()"${curQ===0?' disabled':''}>← Précédente</button>
-      <span style="font-size:13px;color:#888;font-weight:600">${curQ+1} / 20</span>
-      <button class="btn btn-primary" onclick="nextQ()">Suivante →</button>
-    </div>`;
+  document.getElementById('main-area').innerHTML=`<div class="stats"><div class="stat"><div class="stat-n">${s.done}</div><div class="stat-l">Répondues</div></div><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">Correctes</div></div><div class="stat"><div class="stat-n">${s.done?Math.round(s.good/s.done*100):0}%</div><div class="stat-l">Score</div></div><div class="stat"><div class="stat-n">${20-s.done}</div><div class="stat-l">Restantes</div></div></div><div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div><div class="question-card"><div class="q-meta"><span class="q-num-label">Question ${curQ+1} / 20</span><span class="tag ${COLORS[curSubj]}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">${LABELS[curSubj]}</span></div><div class="q-text">${q.q}</div>${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}<div class="options">${optsHtml}</div>${fb}</div><div class="nav"><button class="btn" onclick="prevQ()"${curQ===0?' disabled':''}>← Précédente</button><span style="font-size:13px;color:#888;font-weight:600">${curQ+1} / 20</span><button class="btn btn-primary" onclick="nextQ()">Suivante →</button></div>`;
 }
 
-function doAnswer(i){
-  const key=curSubj+'_'+curQ;
-  if(answered[key]!==undefined)return;
-  answered[key]=i;
-  scores[curSubj].done++;
-  if(i===QUESTIONS[curSubj][curQ].ans)scores[curSubj].good++;
-  renderExos();
-}
-function nextQ(){
-  const qs=QUESTIONS[curSubj];
-  if(curQ<qs.length-1){curQ++;}
-  else{const n=qs.findIndex((_,i)=>answered[curSubj+'_'+i]===undefined);if(n!==-1)curQ=n;}
-  renderExos();
-}
+function doAnswer(i){const key=curSubj+'_'+curQ;if(answered[key]!==undefined)return;answered[key]=i;scores[curSubj].done++;if(i===QUESTIONS[curSubj][curQ].ans)scores[curSubj].good++;renderExos();}
+function nextQ(){const qs=QUESTIONS[curSubj];if(curQ<qs.length-1){curQ++;}else{const n=qs.findIndex((_,i)=>answered[curSubj+'_'+i]===undefined);if(n!==-1)curQ=n;}renderExos();}
 function prevQ(){if(curQ>0){curQ--;renderExos();}}
-function resetExos(){
-  for(let i=0;i<20;i++)delete answered[curSubj+'_'+i];
-  scores[curSubj]={done:0,good:0};curQ=0;renderExos();
-}
+function resetExos(){for(let i=0;i<20;i++)delete answered[curSubj+'_'+i];scores[curSubj]={done:0,good:0};curQ=0;renderExos();}
 
 render();
 </script>
