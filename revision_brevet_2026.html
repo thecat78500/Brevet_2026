@@ -87,7 +87,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
 <div class="header">
   <h1>📚 Révision Brevet 2026</h1>
-  <p>Fiches de cours avec schémas + 20 exercices par matière</p>
+  <p>Fiches de cours avec schémas + 30 exercices par matière</p>
 </div>
 <div class="subject-tabs" id="stabs">
   <button class="stab active" onclick="switchSubject(0)">📐 Mathématiques</button>
@@ -96,7 +96,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 <div class="mode-btns">
   <button class="mbtn active" id="mb0" onclick="switchMode('fiches')">📖 Fiches de révision</button>
-  <button class="mbtn" id="mb1" onclick="switchMode('exos')">✏️ Exercices (20 questions)</button>
+  <button class="mbtn" id="mb1" onclick="switchMode('exos')">✏️ Exercices (30 questions)</button>
 </div>
 <div id="main-area"></div>
 </div>
@@ -551,9 +551,71 @@ const FICHES = {
   <tr><td>1945–1946</td><td>Procès de Nuremberg</td></tr>
   <tr><td>1947</td><td>Début guerre froide — Plan Marshall</td></tr>
   <tr><td>1949</td><td>OTAN · Bombe atomique soviétique</td></tr>
+  <tr><td>1957</td><td>Traité de Rome → CEE</td></tr>
+  <tr><td>1958</td><td>Ve République — De Gaulle</td></tr>
   <tr><td>1961</td><td>Mur de Berlin</td></tr>
+  <tr><td>1962</td><td>Indépendance Algérie · Crise missiles Cuba</td></tr>
   <tr><td>1989</td><td>Chute du Mur de Berlin</td></tr>
-  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>`}
+  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr>
+  <tr><td>1992</td><td>Traité de Maastricht → Union Européenne</td></tr></table>`},
+  {title:"La Première Guerre Mondiale (1914-1918)",content:`<p><strong>Causes :</strong> Nationalisme, alliances militaires, impérialisme colonial, assassinat de François-Ferdinand à Sarajevo (28 juin 1914).</p>
+  <table class="mini-table"><tr><th>Camp</th><th>Pays principaux</th></tr>
+  <tr><td>Triple Entente</td><td>France, Royaume-Uni, Russie (+ USA en 1917)</td></tr>
+  <tr><td>Triple Alliance</td><td>Allemagne, Autriche-Hongrie, Empire ottoman</td></tr></table>
+  <p><strong>Caractéristiques :</strong></p>
+  <ul><li><strong>Guerre de tranchées</strong> : soldats enterrés dans des tranchées sur le front Ouest</li><li><strong>Guerre totale</strong> : toute la société mobilisée (femmes, colonies, industrie)</li><li><strong>Nouvelles armes</strong> : gaz, chars, avions, artillerie lourde</li><li><strong>Batailles meurtrières</strong> : Verdun (1916) → 700 000 morts en quelques mois</li></ul>
+  <p><strong>Fin :</strong> Armistice du <strong>11 novembre 1918</strong> · Traité de Versailles (1919) → l'Allemagne reconnue coupable, paiement de réparations.</p>
+  <div class="tip-box">💡 Bilan : ~10 millions de soldats morts, traumatismes collectifs (veuves noires, mutilés, gueules cassées), redécoupage de la carte de l'Europe.</div>`},
+  {title:"Les régimes totalitaires (entre-deux-guerres)",content:`<p>Dans les années 1920-1930, des régimes totalitaires s'imposent en Europe en réponse aux crises économique et politique.</p>
+  <table class="mini-table"><tr><th>Régime</th><th>Pays</th><th>Chef</th><th>Idéologie</th></tr>
+  <tr><td>Fascisme</td><td>Italie</td><td>Mussolini</td><td>Nationalisme extrême, corporatisme</td></tr>
+  <tr><td>Nazisme</td><td>Allemagne</td><td>Hitler</td><td>Racisme, antisémitisme, pangermanisme</td></tr>
+  <tr><td>Stalinisme</td><td>URSS</td><td>Staline</td><td>Communisme autoritaire, collectivisation</td></tr></table>
+  <p><strong>Caractéristiques communes :</strong></p>
+  <ul><li>Parti unique, culte du chef</li><li>Contrôle de la presse et propagande</li><li>Police politique (SS, Gestapo, NKVD)</li><li>Répression des opposants (camps de concentration / goulags)</li></ul>
+  <div class="tip-box">💡 Le nazisme ajoute une dimension raciste unique : les lois de Nuremberg (1935) privent les Juifs de leurs droits civiques → mène à la Shoah.</div>`},
+  {title:"La décolonisation (années 1950-1970)",content:`<p>Après 1945, les peuples colonisés réclament leur indépendance (idéal des droits de l'homme, affaiblissement des puissances européennes).</p>
+  <table class="mini-table"><tr><th>Type</th><th>Exemple</th><th>Caractéristique</th></tr>
+  <tr><td>Négociée</td><td>Maroc (1956), Tunisie (1956)</td><td>Transition pacifique</td></tr>
+  <tr><td>Violente</td><td>Algérie (1954–1962)</td><td>Guerre d'indépendance → 1 million de morts</td></tr>
+  <tr><td>Rapide</td><td>Afrique sub-saharienne (1960)</td><td>"Année de l'Afrique" : 17 indépendances</td></tr></table>
+  <p><strong>Acteurs clés :</strong></p>
+  <ul><li><strong>FLN</strong> (Front de Libération Nationale) en Algérie</li><li><strong>ONU</strong> : pression internationale pour l'autodétermination</li><li><strong>Conférence de Bandung (1955)</strong> : pays du "Tiers-Monde" refusent les deux blocs</li></ul>
+  <div class="tip-box">💡 Néocolonialisme : après l'indépendance politique, les anciennes puissances maintiennent souvent une dépendance économique.</div>`},
+  {title:"La construction européenne",content:`<p>Projet né après 1945 pour éviter une nouvelle guerre en Europe et reconstruire l'économie.</p>
+  <table class="mini-table"><tr><th>Date</th><th>Étape</th></tr>
+  <tr><td>1951</td><td>CECA : Communauté Européenne du Charbon et de l'Acier (6 pays)</td></tr>
+  <tr><td>1957</td><td>Traité de Rome → CEE (Marché commun à 6 pays)</td></tr>
+  <tr><td>1979</td><td>Élection du Parlement européen au suffrage universel</td></tr>
+  <tr><td>1992</td><td>Traité de Maastricht → Union Européenne · Euro décidé</td></tr>
+  <tr><td>2002</td><td>L'euro remplace les monnaies nationales</td></tr>
+  <tr><td>Aujourd'hui</td><td>27 pays membres de l'UE</td></tr></table>
+  <p><strong>Institutions :</strong> Parlement européen (élu) · Commission européenne (exécutif) · Conseil de l'UE (États membres)</p>
+  <div class="tip-box">💡 Espace Schengen (1985) : libre circulation des personnes entre 26 pays · Monnaie unique : l'euro utilisé par 20 États membres.</div>`},
+  {title:"La Ve République française",content:`<p><strong>Naissance :</strong> Crise algérienne → De Gaulle au pouvoir → Constitution de 1958 → Ve République.</p>
+  <p><strong>Régime semi-présidentiel :</strong></p>
+  <ul><li><strong>Président de la République</strong> : élu au suffrage universel direct (depuis 1962), mandat de 5 ans, chef des armées, dissout l'Assemblée</li><li><strong>Premier Ministre</strong> : nommé par le Président, dirige le gouvernement, responsable devant l'Assemblée</li><li><strong>Assemblée Nationale</strong> : 577 députés élus pour 5 ans, vote les lois</li><li><strong>Sénat</strong> : 348 sénateurs, chambre haute</li></ul>
+  <div class="formula-box">Exécutif bicéphale : Président + Premier Ministre<br>Cohabitation si majorité Assemblée ≠ camp du Président</div>
+  <div class="tip-box">💡 La Ve République est le régime politique de la France depuis 1958. Emmanuel Macron est le 8e président.</div>`},
+  {title:"EMC : La laïcité et les valeurs républicaines",content:`<p><strong>La laïcité</strong> est un principe fondamental de la République française, inscrit dans la loi de 1905 (séparation des Églises et de l'État).</p>
+  <p><strong>Trois principes :</strong></p>
+  <ul><li><strong>Liberté de conscience :</strong> chacun peut croire ou ne pas croire</li><li><strong>Égalité des citoyens</strong> quelle que soit leur religion</li><li><strong>Neutralité de l'État</strong> : les services publics ne favorisent aucune religion</li></ul>
+  <p><strong>Valeurs républicaines :</strong></p>
+  <table class="mini-table"><tr><th>Valeur</th><th>Signification</th></tr>
+  <tr><td>Liberté</td><td>Droits fondamentaux, liberté d'expression, de la presse</td></tr>
+  <tr><td>Égalité</td><td>Même droits pour tous les citoyens, mixité</td></tr>
+  <tr><td>Fraternité</td><td>Solidarité, cohésion sociale, aide aux plus faibles</td></tr>
+  <tr><td>Laïcité</td><td>Neutralité de l'État face aux religions</td></tr></table>
+  <div class="tip-box">💡 Fraternité ≠ charité : c'est un devoir civique inscrit dans la Constitution. La DDHC (1789) garantit ces droits fondamentaux.</div>`},
+  {title:"Géographie : Espaces productifs & Aménagement",content:`<p><strong>Espaces productifs</strong> = espaces où se crée de la richesse économique.</p>
+  <table class="mini-table"><tr><th>Type</th><th>Exemple</th><th>Caractéristique</th></tr>
+  <tr><td>Agricole</td><td>Beauce, Champagne</td><td>Grandes cultures mécanisées, agro-industrie</td></tr>
+  <tr><td>Industriel</td><td>Val-de-Loire, Toulouse</td><td>Aéronautique, automobile, énergie</td></tr>
+  <tr><td>Touristique</td><td>Côte d'Azur, Alpes</td><td>1er pays touristique mondial</td></tr>
+  <tr><td>Tertiaire</td><td>La Défense (Paris)</td><td>Services, finance, sièges sociaux</td></tr></table>
+  <p><strong>Aménagement du territoire :</strong> politique de l'État pour réduire les inégalités entre les régions.</p>
+  <ul><li><strong>DATAR</strong> (1963) → puis CGET → Agence Nationale de la Cohésion des Territoires</li><li>Développer les régions périphériques face à l'hyper-centralisation parisienne</li><li><strong>Territoires ultramarins</strong> (DROM-COM) : Guadeloupe, Martinique, Guyane, Réunion, Mayotte → font partie de l'UE mais ont des statuts spéciaux</li></ul>
+  <div class="tip-box">💡 La France est très centralisée autour de Paris (12 millions d'hab. en Île-de-France = 1/5 de la population). Objectif : polycentrisme.</div>`}
 ],
 2:[
   {title:"Génétique — ADN, chromosomes, allèles",content:`<p><strong>Vocabulaire :</strong> ADN (noyau, 46 chromosomes) · Gène (portion ADN) · Allèle (version du gène) · Génotype / Phénotype</p>
@@ -598,7 +660,15 @@ const QUESTIONS = {
   {q:"Triangle aux côtés 6 cm, 8 cm et 10 cm. Est-il rectangle ?",opts:["Oui, car 6² + 8² = 10²","Non, car 6 + 8 ≠ 10","Oui, car 6 × 8 = 10","Impossible à déterminer"],ans:0,exp:"6² + 8² = 36 + 64 = 100 = 10² → triangle rectangle (réciproque de Pythagore)."},
   {q:"Moyenne de : 10 ; 14 ; 8 ; 16 ; 12 ?",opts:["12","13","10","11"],ans:0,exp:"Somme = 60, nb de valeurs = 5 → moyenne = 60/5 = 12."},
   {q:"Résoudre : 2(x + 3) = x + 9",opts:["x = 3","x = 5","x = −3","x = 1"],ans:0,exp:"2x + 6 = x + 9 → x = 3."},
-  {q:"Quelle formule calcule le volume d'une boule de rayon r ?",opts:["π × r²","(4/3) × π × r³","(1/3) × π × r² × h","2 × π × r"],ans:1,exp:"Volume d'une boule = (4/3) × π × r³."}
+  {q:"Quelle formule calcule le volume d'une boule de rayon r ?",opts:["π × r²","(4/3) × π × r³","(1/3) × π × r² × h","2 × π × r"],ans:1,exp:"Volume d'une boule = (4/3) × π × r³."},
+  {q:"Développer (2x + 3)²",opts:["4x² + 9","4x² + 12x + 9","4x² + 6x + 9","2x² + 12x + 9"],ans:1,exp:"(a+b)² = a²+2ab+b² → (2x)²+2×2x×3+3² = 4x²+12x+9."},
+  {q:"Factoriser 9x² − 16",opts:["(3x−4)²","(3x+4)(3x−4)","(9x−4)(x+4)","3(3x²−16)"],ans:1,exp:"Identité a²−b² = (a+b)(a−b) → (3x)²−4² = (3x+4)(3x−4)."},
+  {q:"Dans un triangle rectangle, sin(30°) = 0,5 et l'hypoténuse vaut 12 cm. Quel est le côté opposé à 30° ?",opts:["4 cm","6 cm","8 cm","10 cm"],ans:1,exp:"sin(30°) = opposé/hypoténuse → opposé = 12 × 0,5 = 6 cm."},
+  {q:"Aire d'un trapèze de bases 6 et 10 cm, hauteur 4 cm ?",opts:["32 cm²","40 cm²","24 cm²","16 cm²"],ans:0,exp:"Aire = (b1+b2)/2 × h = (6+10)/2 × 4 = 8 × 4 = 32 cm²."},
+  {q:"Que vaut 2⁻³ ?",opts:["−8","1/8","−6","1/6"],ans:1,exp:"a⁻ⁿ = 1/aⁿ → 2⁻³ = 1/2³ = 1/8."},
+  {q:"Quelle est la probabilité de tirer un as dans un jeu de 52 cartes ?",opts:["1/52","1/13","4/52 = 1/13","1/4"],ans:1,exp:"Il y a 4 as dans 52 cartes → P = 4/52 = 1/13."},
+  {q:"Un capital de 500 € placé à 4 % par an. Valeur après 1 an ?",opts:["504 €","520 €","540 €","480 €"],ans:1,exp:"500 × 1,04 = 520 €."},
+  {q:"La droite d'équation y = 5 est…",opts:["Une droite croissante","Une droite décroissante","Une droite horizontale","Une droite verticale"],ans:2,exp:"y = 5 est une droite horizontale (constante), parallèle à l'axe des abscisses."}
 ],
 1:[
   {q:"Quelle est la date du début de la Seconde Guerre Mondiale ?",opts:["1er septembre 1939","11 novembre 1918","8 mai 1945","28 juillet 1914"],ans:0,exp:"La SGM débute le 1er septembre 1939 avec l'invasion de la Pologne par l'Allemagne nazie."},
@@ -620,7 +690,17 @@ const QUESTIONS = {
   {q:"Qui prononce l'Appel du 18 juin 1940 ?",opts:["Philippe Pétain","Winston Churchill","Charles de Gaulle","Dwight Eisenhower"],ans:2,exp:"De Gaulle lance depuis Londres sur la BBC l'appel du 18 juin 1940, refusant la capitulation."},
   {q:"La Rafle du Vel d'Hiv a eu lieu…",opts:["Juin 1940","Juillet 1942","Juin 1944","Mai 1945"],ans:1,exp:"16-17 juillet 1942 : 13 000 Juifs (dont 4 000 enfants) arrêtés par la police française."},
   {q:"Qu'est-ce qu'une aire urbaine ?",opts:["Une ville médiévale fortifiée","Un quartier défavorisé","Ville-centre + banlieues + communes périurbaines liées par les trajets domicile-travail","Un parc naturel urbain"],ans:2,exp:"L'aire urbaine = ville-centre + banlieues + communes dont une partie des habitants travaille dans la ville-centre."},
-  {q:"Quel principe garantit l'équilibre entre pouvoirs législatif, exécutif et judiciaire ?",opts:["Le vote universel","La séparation des pouvoirs","La proportionnelle","Le Conseil Constitutionnel"],ans:1,exp:"La séparation des pouvoirs (Montesquieu) garantit qu'aucun pouvoir ne domine les autres en démocratie."}
+  {q:"Quel principe garantit l'équilibre entre pouvoirs législatif, exécutif et judiciaire ?",opts:["Le vote universel","La séparation des pouvoirs","La proportionnelle","Le Conseil Constitutionnel"],ans:1,exp:"La séparation des pouvoirs (Montesquieu) garantit qu'aucun pouvoir ne domine les autres en démocratie."},
+  {q:"Quelle est la date de l'armistice de la Première Guerre Mondiale ?",opts:["11 novembre 1918","8 mai 1945","28 juillet 1914","11 novembre 1939"],ans:0,exp:"L'armistice mettant fin à la Première Guerre Mondiale est signé le 11 novembre 1918 à 11h."},
+  {q:"Qu'est-ce qu'une guerre totale ?",opts:["Une guerre qui dure plus de 4 ans","Une guerre où toute la société est mobilisée (civils, industrie, colonies)","Une guerre menée sur tous les continents","Une guerre sans prisonniers"],ans:1,exp:"La guerre totale mobilise l'ensemble de la société : femmes à l'usine, colonies fournissent des soldats, économie de guerre."},
+  {q:"Quel régime totalitaire dirige l'Allemagne d'Hitler ?",opts:["Fascisme","Communisme","Nazisme","Anarchisme"],ans:2,exp:"Hitler dirige l'Allemagne nazie (1933-1945) fondée sur le nazisme : nationalisme extrême, antisémitisme, expansionnisme."},
+  {q:"Que signifie la loi de 1905 en France ?",opts:["L'école devient obligatoire","Séparation de l'Église et de l'État (laïcité)","Le droit de vote accordé aux femmes","La création de la Sécurité sociale"],ans:1,exp:"La loi du 9 décembre 1905 sépare l'Église et l'État : principe de laïcité, liberté de conscience, neutralité de l'État."},
+  {q:"Quel traité crée l'Union Européenne en 1992 ?",opts:["Traité de Rome","Traité de Versailles","Traité de Maastricht","Traité de Lisbonne"],ans:2,exp:"Le traité de Maastricht (1992) crée officiellement l'Union Européenne et pose les bases de la monnaie unique (l'euro)."},
+  {q:"La Ve République est fondée en…",opts:["1944","1946","1958","1968"],ans:2,exp:"La Ve République est fondée en 1958 à l'initiative du général de Gaulle, lors de la crise algérienne."},
+  {q:"Qu'est-ce que la Conférence de Bandung (1955) ?",opts:["Un accord de paix entre USA et URSS","La réunion des pays non-alignés d'Asie et d'Afrique","La création de l'OTAN","Un traité sur les armes nucléaires"],ans:1,exp:"Bandung (1955) : 29 pays afro-asiatiques refusent de choisir entre les deux blocs. Naissance du Tiers-Monde et du non-alignement."},
+  {q:"Combien de pays composent l'Union Européenne aujourd'hui ?",opts:["15","25","27","30"],ans:2,exp:"L'UE compte 27 États membres depuis le Brexit (sortie du Royaume-Uni en 2020)."},
+  {q:"Quel est le rôle de la DDHC (1789) ?",opts:["Organiser les élections présidentielles","Garantir les droits fondamentaux des citoyens","Fixer le salaire minimum","Créer l'armée nationale"],ans:1,exp:"La Déclaration des Droits de l'Homme et du Citoyen (1789) proclame les droits naturels et universels : liberté, égalité, propriété, sûreté."},
+  {q:"La guerre d'Algérie dure de…",opts:["1945 à 1950","1954 à 1962","1960 à 1968","1950 à 1956"],ans:1,exp:"La guerre d'Algérie (1954-1962) oppose le FLN algérien à la France. L'indépendance est accordée par les Accords d'Évian (mars 1962)."}
 ],
 2:[
   {q:"Combien de chromosomes possède une cellule humaine normale ?",opts:["23","44","46","48"],ans:2,exp:"Les cellules humaines contiennent 46 chromosomes, organisés en 23 paires."},
@@ -642,7 +722,16 @@ const QUESTIONS = {
   {q:"Plant hétérozygote (Jj, jaune dominant) × plant vert (jj). Quel % de descendants sera vert ?",opts:["0 %","25 %","50 %","75 %"],ans:2,exp:"Jj × jj → Jj (jaune) et jj (vert) en parts égales → 50 % de descendants verts."},
   {q:"Quelle est la différence entre masse et poids ?",opts:["Ce sont des synonymes","La masse dépend du lieu, le poids est constant","La masse est constante (kg), le poids varie selon la gravité (N)","Le poids est constant, la masse varie"],ans:2,exp:"Masse (kg) = constante · Poids (N) = P = m × g, varie selon le lieu."},
   {q:"Quel est le rôle des lymphocytes T cytotoxiques ?",opts:["Produire des anticorps","Transporter l'oxygène dans le sang","Détruire directement les cellules infectées","Former des caillots sanguins"],ans:2,exp:"Les lymphocytes T cytotoxiques détruisent directement les cellules infectées par un agent pathogène."},
-  {q:"Quelle formule calcule le volume d'un cylindre ?",opts:["π × r²","(4/3) × π × r³","π × r² × h","(1/3) × π × r² × h"],ans:2,exp:"Volume d'un cylindre = π × r² × h, où r est le rayon et h la hauteur."}
+  {q:"Quelle formule calcule le volume d'un cylindre ?",opts:["π × r²","(4/3) × π × r³","π × r² × h","(1/3) × π × r² × h"],ans:2,exp:"Volume d'un cylindre = π × r² × h, où r est le rayon et h la hauteur."},
+  {q:"Qu'est-ce qu'une mutation génétique ?",opts:["Une maladie contagieuse","Une modification de la séquence d'ADN","La reproduction d'une cellule","Le passage des gènes de parent à enfant"],ans:1,exp:"Une mutation est une modification de la séquence de l'ADN. Elle peut être naturelle (erreur de copie) ou provoquée (rayonnements, produits chimiques)."},
+  {q:"Quelle est la valeur du pH d'une solution neutre ?",opts:["pH = 0","pH = 7","pH = 14","pH = 5"],ans:1,exp:"pH = 7 correspond à une solution neutre (comme l'eau pure à 25°C)."},
+  {q:"Dans un circuit en dérivation, que se passe-t-il si une ampoule grille ?",opts:["Tout le circuit s'éteint","Les autres ampoules brillent moins","Les autres ampoules continuent de fonctionner","Le circuit court-circuite"],ans:2,exp:"En dérivation, chaque branche est indépendante. Si une ampoule grille, les autres continuent à fonctionner normalement."},
+  {q:"Un objet de 5 kg a un poids de 49 N sur Terre. Quel est son poids sur la Lune ? (g Lune = 1,6 N/kg)",opts:["4,9 N","8 N","49 N","16 N"],ans:1,exp:"P = m × g Lune = 5 × 1,6 = 8 N. La masse reste 5 kg mais le poids change selon le lieu."},
+  {q:"Qu'est-ce que la mitose ?",opts:["La fusion de deux cellules","La division d'une cellule en deux cellules identiques","La mort programmée d'une cellule","La reproduction sexuée"],ans:1,exp:"La mitose est la division cellulaire qui produit deux cellules filles génétiquement identiques à la cellule mère (46 chromosomes → 46 chromosomes)."},
+  {q:"Qu'appelle-t-on 'réactifs' dans une réaction chimique ?",opts:["Les produits obtenus après la réaction","Les substances présentes avant la réaction","Les catalyseurs","Les sous-produits gazeux"],ans:1,exp:"Les réactifs sont les substances qui reagissent ensemble et disparaissent au cours de la réaction chimique pour former des produits."},
+  {q:"Quelle plaque tectonique est la plus grande ?",opts:["La plaque Africaine","La plaque Eurasiatique","La plaque Pacifique","La plaque Américaine"],ans:2,exp:"La plaque Pacifique est la plus grande plaque tectonique, couvrant la majeure partie de l'océan Pacifique."},
+  {q:"Qu'est-ce qu'un antigène ?",opts:["Une protéine produite par les lymphocytes","Une molécule étrangère reconnue par le système immunitaire","Un globule blanc","Un médicament anti-infectieux"],ans:1,exp:"Un antigène est toute molécule étrangère (virus, bactérie, toxine) capable de déclencher une réponse immunitaire spécifique."},
+  {q:"Un résistor a une résistance de 10 Ω et l'intensité du courant est 2 A. Quelle est la tension ?",opts:["0,2 V","5 V","12 V","20 V"],ans:3,exp:"Loi d'Ohm : U = R × I = 10 × 2 = 20 V."}
 ]
 };
 
@@ -671,23 +760,24 @@ function toggleFiche(key){ficheOpen[key]=!ficheOpen[key];renderFiches();}
 
 function renderExos(){
   const qs=QUESTIONS[curSubj],s=scores[curSubj];
-  if(s.done===20){
-    const pct=Math.round(s.good/20*100);
+  const N=qs.length;
+  if(s.done===N){
+    const pct=Math.round(s.good/N*100);
     const msg=pct>=80?'Excellent ! Tu es prêt(e) pour le brevet !':pct>=60?'Bien ! Revois tes erreurs pour progresser.':'Continue à réviser, tu vas y arriver !';
     const emoji=pct>=80?'🎉':pct>=60?'👍':'💪';
-    document.getElementById('main-area').innerHTML=`<div class="final"><div style="font-size:48px">${emoji}</div><div class="final-score">${s.good}/20</div><div class="final-msg">${msg} (${pct}%)</div><div class="grid2"><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">✓ Correctes</div></div><div class="stat"><div class="stat-n" style="color:#dc2626">${20-s.good}</div><div class="stat-l">✗ Erreurs</div></div></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" onclick="resetExos()">🔄 Recommencer</button><button class="btn btn-primary" onclick="switchMode('fiches')">📖 Revoir les fiches</button></div></div>`;
+    document.getElementById('main-area').innerHTML=`<div class="final"><div style="font-size:48px">${emoji}</div><div class="final-score">${s.good}/${N}</div><div class="final-msg">${msg} (${pct}%)</div><div class="grid2"><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">✓ Correctes</div></div><div class="stat"><div class="stat-n" style="color:#dc2626">${N-s.good}</div><div class="stat-l">✗ Erreurs</div></div></div><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn" onclick="resetExos()">🔄 Recommencer</button><button class="btn btn-primary" onclick="switchMode('fiches')">📖 Revoir les fiches</button></div></div>`;
     return;
   }
-  const pct=Math.round(s.done/20*100),q=qs[curQ],key=curSubj+'_'+curQ,isAns=answered[key]!==undefined;
+  const pct=Math.round(s.done/N*100),q=qs[curQ],key=curSubj+'_'+curQ,isAns=answered[key]!==undefined;
   let optsHtml=q.opts.map((o,i)=>{let cls='option';if(isAns){if(i===q.ans)cls+=' correct';else if(i===answered[key]&&i!==q.ans)cls+=' wrong';}return`<button class="${cls}"${isAns?' disabled':''} onclick="doAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`;}).join('');
   const fb=isAns?`<div class="feedback ${answered[key]===q.ans?'correct':'wrong'}"><strong>${answered[key]===q.ans?'✓ Bonne réponse !':'✗ Mauvaise réponse.'}</strong> ${q.exp}</div>`:'';
-  document.getElementById('main-area').innerHTML=`<div class="stats"><div class="stat"><div class="stat-n">${s.done}</div><div class="stat-l">Répondues</div></div><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">Correctes</div></div><div class="stat"><div class="stat-n">${s.done?Math.round(s.good/s.done*100):0}%</div><div class="stat-l">Score</div></div><div class="stat"><div class="stat-n">${20-s.done}</div><div class="stat-l">Restantes</div></div></div><div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div><div class="question-card"><div class="q-meta"><span class="q-num-label">Question ${curQ+1} / 20</span><span class="tag ${COLORS[curSubj]}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">${LABELS[curSubj]}</span></div><div class="q-text">${q.q}</div>${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}<div class="options">${optsHtml}</div>${fb}</div><div class="nav"><button class="btn" onclick="prevQ()"${curQ===0?' disabled':''}>← Précédente</button><span style="font-size:13px;color:#888;font-weight:600">${curQ+1} / 20</span><button class="btn btn-primary" onclick="nextQ()">Suivante →</button></div>`;
+  document.getElementById('main-area').innerHTML=`<div class="stats"><div class="stat"><div class="stat-n">${s.done}</div><div class="stat-l">Répondues</div></div><div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">Correctes</div></div><div class="stat"><div class="stat-n">${s.done?Math.round(s.good/s.done*100):0}%</div><div class="stat-l">Score</div></div><div class="stat"><div class="stat-n">${N-s.done}</div><div class="stat-l">Restantes</div></div></div><div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div><div class="question-card"><div class="q-meta"><span class="q-num-label">Question ${curQ+1} / ${N}</span><span class="tag ${COLORS[curSubj]}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">${LABELS[curSubj]}</span></div><div class="q-text">${q.q}</div>${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}<div class="options">${optsHtml}</div>${fb}</div><div class="nav"><button class="btn" onclick="prevQ()"${curQ===0?' disabled':''}>← Précédente</button><span style="font-size:13px;color:#888;font-weight:600">${curQ+1} / ${N}</span><button class="btn btn-primary" onclick="nextQ()">Suivante →</button></div>`;
 }
 
 function doAnswer(i){const key=curSubj+'_'+curQ;if(answered[key]!==undefined)return;answered[key]=i;scores[curSubj].done++;if(i===QUESTIONS[curSubj][curQ].ans)scores[curSubj].good++;renderExos();}
 function nextQ(){const qs=QUESTIONS[curSubj];if(curQ<qs.length-1){curQ++;}else{const n=qs.findIndex((_,i)=>answered[curSubj+'_'+i]===undefined);if(n!==-1)curQ=n;}renderExos();}
 function prevQ(){if(curQ>0){curQ--;renderExos();}}
-function resetExos(){for(let i=0;i<20;i++)delete answered[curSubj+'_'+i];scores[curSubj]={done:0,good:0};curQ=0;renderExos();}
+function resetExos(){const n=QUESTIONS[curSubj].length;for(let i=0;i<n;i++)delete answered[curSubj+'_'+i];scores[curSubj]={done:0,good:0};curQ=0;renderExos();}
 
 render();
 </script>
