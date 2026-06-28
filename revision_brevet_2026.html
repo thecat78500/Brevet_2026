@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révision Brevet 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
+.app{max-width:760px;margin:0 auto;padding:16px}
+.header{text-align:center;margin-bottom:20px;padding:20px;background:#fff;border-radius:16px;border:1px solid #e0e0d8}
+.header h1{font-size:24px;font-weight:600;margin-bottom:6px}
+.header p{font-size:14px;color:#666}
+.subject-tabs{display:flex;gap:6px;margin-bottom:12px;background:#fff;border-radius:12px;padding:8px;border:1px solid #e0e0d8}
+.stab{flex:1;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:#888;border-radius:8px;transition:all .2s}
+.stab.active{background:#1a1a1a;color:#fff}
+.stab:hover:not(.active){background:#f0f0ec;color:#1a1a1a}
+.mode-btns{display:flex;gap:8px;margin-bottom:16px}
+.mbtn{flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#888;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.mbtn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.mbtn:hover:not(.active){background:#f0f0ec;color:#1a1a1a}
+.fiche{background:#fff;border:1px solid #e0e0d8;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.fiche-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+.fiche-header h3{font-size:15px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:8px}
+.fiche-body{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+.fiche-body.open{max-height:1000px;padding:0 16px 16px}
+.fiche-body p{font-size:14px;color:#333;line-height:1.7;margin-bottom:10px}
+.fiche-body ul,ol{padding-left:1.4rem;margin-bottom:10px}
+.fiche-body li{font-size:14px;color:#333;line-height:1.8}
+.formula-box{background:#f5f5f0;border-radius:10px;padding:12px 14px;margin:10px 0;font-size:13px;color:#1a1a1a;line-height:1.9;border-left:3px solid #bbb;font-family:monospace}
+.tip-box{background:#EBF4FF;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13px;color:#1a4580;border-left:3px solid #4a90d9}
+.key-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-size:12px;font-weight:700}
+.kb-blue{background:#dbeafe;color:#1e40af}
+.kb-amber{background:#fef3c7;color:#92400e}
+.kb-green{background:#d1fae5;color:#065f46}
+.mini-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+.mini-table th{background:#f5f5f0;padding:7px 10px;text-align:left;font-weight:600;font-size:12px;color:#666;border:1px solid #e0e0d8}
+.mini-table td{padding:7px 10px;border:1px solid #e0e0d8;color:#333;vertical-align:top;line-height:1.5}
+.progress-wrap{background:#e8e8e4;border-radius:8px;height:6px;margin-bottom:14px;overflow:hidden}
+.progress-fill{height:100%;border-radius:8px;background:#1a1a1a;transition:width .3s}
+.stats{display:flex;gap:8px;margin-bottom:14px}
+.stat{flex:1;background:#fff;border-radius:10px;padding:10px;text-align:center;border:1px solid #e0e0d8}
+.stat-n{font-size:20px;font-weight:700;color:#1a1a1a}
+.stat-l{font-size:11px;color:#888;margin-top:2px}
+.question-card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:18px;margin-bottom:12px}
+.q-meta{display:flex;justify-content:space-between;margin-bottom:10px}
+.q-num-label{font-size:12px;color:#888;font-weight:600}
+.q-text{font-size:15px;color:#1a1a1a;line-height:1.65;margin-bottom:14px;font-weight:500}
+.q-hint{font-size:13px;color:#1a4580;margin-bottom:12px;font-style:italic;padding:8px 12px;background:#EBF4FF;border-radius:8px}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{padding:11px 14px;border:1px solid #ddd;border-radius:10px;cursor:pointer;font-size:14px;color:#333;background:#fff;text-align:left;transition:all .15s;font-family:inherit}
+.option:hover:not(:disabled){background:#f5f5f0;border-color:#bbb}
+.option.correct{background:#d1fae5;border-color:#059669;color:#064e3b;font-weight:600}
+.option.wrong{background:#fee2e2;border-color:#dc2626;color:#7f1d1d}
+.option:disabled{cursor:default}
+.feedback{margin-top:12px;padding:12px;border-radius:10px;font-size:14px;line-height:1.6}
+.feedback.correct{background:#d1fae5;color:#064e3b;border:1px solid #059669}
+.feedback.wrong{background:#fee2e2;color:#7f1d1d;border:1px solid #dc2626}
+.nav{display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:space-between}
+.btn{padding:10px 18px;border-radius:10px;border:1px solid #ddd;background:#fff;color:#1a1a1a;font-size:14px;cursor:pointer;font-weight:600;font-family:inherit;transition:all .15s}
+.btn:hover:not(:disabled){background:#f5f5f0}
+.btn-primary{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn-primary:hover:not(:disabled){background:#333}
+.btn:disabled{opacity:.35;cursor:default}
+.btn-full{width:100%;margin-top:10px;padding:12px}
+.final{text-align:center;padding:2.5rem 1rem;background:#fff;border-radius:12px;border:1px solid #e0e0d8}
+.final-score{font-size:52px;font-weight:700;color:#1a1a1a;margin:12px 0}
+.final-msg{font-size:15px;color:#666;margin-bottom:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:260px;margin:0 auto 20px}
+.chevron{font-size:11px;color:#999;transition:transform .2s;display:inline-block}
+.chevron.open{transform:rotate(180deg)}
+.section-title{font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;margin-right:6px;margin-bottom:4px}
+.divider{border:none;border-top:1px solid #e8e8e4;margin:12px 0}
+@media(max-width:500px){
+  .subject-tabs{flex-direction:column}
+  .stats{flex-wrap:wrap}
+  .stat{min-width:calc(50% - 4px)}
+  .final-score{font-size:40px}
+  .nav .btn{padding:10px 12px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>📚 Révision Brevet 2026</h1>
+  <p>Fiches de cours + 20 exercices par matière · Corrections immédiates</p>
+</div>
+
+<div class="subject-tabs" id="stabs">
+  <button class="stab active" onclick="switchSubject(0)">📐 Mathématiques</button>
+  <button class="stab" onclick="switchSubject(1)">🗺️ Histoire-Géo & EMC</button>
+  <button class="stab" onclick="switchSubject(2)">🔬 Sciences</button>
+</div>
+
+<div class="mode-btns">
+  <button class="mbtn active" id="mb0" onclick="switchMode('fiches')">📖 Fiches de révision</button>
+  <button class="mbtn" id="mb1" onclick="switchMode('exos')">✏️ Exercices (20 questions)</button>
+</div>
+
+<div id="main-area"></div>
+
+</div>
+
+<script>
+const FICHES = {
+0:[
+  {title:"Théorème de Pythagore",content:`<p>Dans un triangle <strong>rectangle en C</strong> : <strong>AB² = AC² + BC²</strong> (AB = hypoténuse, côté opposé à l'angle droit).</p>
+  <div class="formula-box">AB² = AC² + BC²<br>→ AB = √(AC² + BC²)</div>
+  <p><strong>Réciproque :</strong> Si AB² = AC² + BC², alors le triangle est rectangle en C.</p>
+  <div class="tip-box">💡 Méthode : 1) Identifier l'hypoténuse · 2) Poser l'égalité · 3) Calculer · 4) Conclure</div>`},
+  {title:"Théorème de Thalès",content:`<p>Si D est sur [AB] et E est sur [AC] avec <strong>DE // BC</strong>, alors :</p>
+  <div class="formula-box">AD/AB = AE/AC = DE/BC</div>
+  <p>On utilise une <strong>multiplication en croix</strong> pour trouver la valeur inconnue.</p>
+  <div class="tip-box">💡 Méthode : 1) Vérifier le parallélisme · 2) Nommer les triangles · 3) Poser les rapports · 4) Multiplier en croix</div>`},
+  {title:"Trigonométrie dans le triangle rectangle",content:`<p>Pour un angle aigu <strong>α</strong> dans un triangle rectangle :</p>
+  <div class="formula-box">cos α = côté adjacent / hypoténuse<br>sin α = côté opposé / hypoténuse<br>tan α = côté opposé / côté adjacent</div>
+  <p><strong>Moyen mémo : SOH-CAH-TOA</strong></p>
+  <div class="tip-box">💡 Identifier l'angle → nommer les côtés → choisir la bonne formule → calculer</div>`},
+  {title:"Aires et volumes à connaître",content:`<table class="mini-table"><tr><th>Forme</th><th>Formule</th></tr>
+  <tr><td>Disque</td><td>π × r²</td></tr>
+  <tr><td>Cylindre (volume)</td><td>π × r² × h</td></tr>
+  <tr><td>Cône (volume)</td><td>(1/3) × π × r² × h</td></tr>
+  <tr><td>Boule (volume)</td><td>(4/3) × π × r³</td></tr>
+  <tr><td>Pyramide (volume)</td><td>(1/3) × base × hauteur</td></tr></table>`},
+  {title:"Fonctions affines",content:`<p>Une fonction affine s'écrit <strong>f(x) = ax + b</strong></p>
+  <ul><li><strong>a</strong> = coefficient directeur (pente)</li><li><strong>b</strong> = ordonnée à l'origine (valeur en x = 0)</li><li>a > 0 → croissante · a < 0 → décroissante · a = 0 → constante</li></ul>
+  <div class="formula-box">Pente a = (y2 − y1) / (x2 − x1)</div>`},
+  {title:"Calcul littéral & Équations",content:`<p><strong>Identités remarquables :</strong></p>
+  <div class="formula-box">(a+b)² = a² + 2ab + b²<br>(a−b)² = a² − 2ab + b²<br>(a+b)(a−b) = a² − b²</div>
+  <p><strong>Résoudre une équation du 1er degré :</strong> isoler x en effectuant les mêmes opérations des deux côtés.</p>
+  <div class="tip-box">💡 Ex : 3x + 7 = 22 → 3x = 15 → x = 5</div>`},
+  {title:"Statistiques & Probabilités",content:`<p><strong>Statistiques :</strong></p>
+  <ul><li><strong>Moyenne</strong> = somme des valeurs / nombre de valeurs</li><li><strong>Médiane</strong> = valeur centrale d'une série ordonnée</li><li><strong>Étendue</strong> = valeur max − valeur min</li></ul>
+  <div class="formula-box">P(A) = cas favorables / cas possibles<br>0 ≤ P(A) ≤ 1 · P(A) + P(Ā) = 1</div>`},
+  {title:"Automatismes — pièges classiques",content:`<table class="mini-table"><tr><th>Notion</th><th>À retenir</th></tr>
+  <tr><td>Fractions</td><td>Même dénominateur pour additionner</td></tr>
+  <tr><td>Pourcentages</td><td>+t% → ×(1+t/100) · −t% → ×(1−t/100)</td></tr>
+  <tr><td>Puissances</td><td>a⁰ = 1 · a⁻ⁿ = 1/aⁿ</td></tr>
+  <tr><td>Notation scientifique</td><td>0,00045 = 4,5 × 10⁻⁴</td></tr>
+  <tr><td>Divisibilité par 3</td><td>Somme des chiffres divisible par 3</td></tr>
+  <tr><td>Médiane (nb pair)</td><td>Moyenne des 2 valeurs centrales</td></tr></table>`}
+],
+1:[
+  {title:"La Seconde Guerre Mondiale (1939-1945)",content:`<table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
+  <tr><td>1er sept. 1939</td><td>Invasion de la Pologne → début de la SGM</td></tr>
+  <tr><td>Juin 1940</td><td>Défaite de la France · Appel du 18 juin (De Gaulle) · Régime de Vichy (Pétain)</td></tr>
+  <tr><td>Déc. 1941</td><td>Pearl Harbor → entrée en guerre des États-Unis</td></tr>
+  <tr><td>16-17 juil. 1942</td><td>Rafle du Vel d'Hiv (13 000 Juifs arrêtés par la police française)</td></tr>
+  <tr><td>6 juin 1944</td><td>Débarquement en Normandie (D-Day)</td></tr>
+  <tr><td>8 mai 1945</td><td>Capitulation allemande · Fin de la SGM en Europe</td></tr></table>
+  <div class="tip-box">⚠️ Notions clés : Régime de Vichy (collaborationnisme, antisémitisme) · Shoah (génocide ~6 millions de Juifs) · Résistance (intérieure + France Libre) · Procès de Nuremberg (crimes contre l'humanité)</div>`},
+  {title:"La Guerre froide (1947-1991)",content:`<p><strong>Deux blocs opposés :</strong></p>
+  <ul><li>🇺🇸 <strong>Bloc occidental</strong> : USA, capitalisme, démocratie, OTAN (1949)</li><li>🇷🇺 <strong>Bloc oriental</strong> : URSS, communisme, Pacte de Varsovie (1955)</li></ul>
+  <table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
+  <tr><td>1947</td><td>Discours Truman · Plan Marshall · Début guerre froide</td></tr>
+  <tr><td>1961</td><td>Construction du Mur de Berlin</td></tr>
+  <tr><td>1962</td><td>Crise des missiles de Cuba (pic de tension)</td></tr>
+  <tr><td>1989</td><td>Chute du Mur de Berlin</td></tr>
+  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>
+  <div class="tip-box">💡 Guerre froide ≠ guerre directe. Arme principale : dissuasion nucléaire (équilibre de la terreur). Affrontements indirects : Corée, Vietnam.</div>`},
+  {title:"Le Front Populaire (1936)",content:`<p><strong>Contexte :</strong> crise économique des années 30, montée des fascismes en Europe.</p>
+  <p><strong>1936 :</strong> victoire électorale coalition Socialistes + Communistes + Radicaux → <strong>Léon Blum</strong> Premier Ministre.</p>
+  <p><strong>Accords Matignon (juin 1936) :</strong></p>
+  <ul><li>Semaine de <strong>40 heures</strong></li><li><strong>2 semaines</strong> de congés payés</li><li>Liberté syndicale</li><li>Augmentation des salaires</li></ul>`},
+  {title:"Géographie : Métropolisation & Aires urbaines",content:`<p><strong>Vocabulaire essentiel :</strong></p>
+  <ul><li><strong>Métropolisation</strong> : concentration des hommes, activités et richesses dans les grandes villes</li><li><strong>Aire urbaine</strong> : ville-centre + banlieues + communes périurbaines (liées par les trajets domicile-travail)</li><li><strong>Périurbain</strong> : zone entre banlieue et espace rural, forte croissance depuis les années 70</li><li><strong>Étalement urbain</strong> : expansion spatiale des villes</li></ul>
+  <p><strong>Hiérarchie en France :</strong><br>Paris (mondiale) → Lyon, Marseille, Bordeaux… (régionales) → villes moyennes → espaces ruraux</p>
+  <div class="tip-box">💡 Les métropoles concentrent emplois qualifiés, universités, hôpitaux, transports internationaux.</div>`},
+  {title:"EMC : La démocratie représentative",content:`<p><strong>Les 3 pouvoirs (séparation des pouvoirs — Montesquieu) :</strong></p>
+  <ul><li>⚖️ <strong>Législatif</strong> : Parlement = Assemblée Nationale (577 députés) + Sénat (348 sénateurs) → vote les lois</li><li>🏛️ <strong>Exécutif</strong> : Président + gouvernement → applique les lois</li><li>🔨 <strong>Judiciaire</strong> : tribunaux → fait respecter les lois</li></ul>
+  <div class="formula-box">Devise : Liberté · Égalité · Fraternité<br>Suffrage universel direct : tous les citoyens majeurs votent<br>Président élu pour 5 ans au suffrage universel direct</div>`},
+  {title:"Chronologie — repères absolus",content:`<table class="mini-table"><tr><th>Date</th><th>Événement</th></tr>
+  <tr><td>1914–1918</td><td>Première Guerre Mondiale</td></tr>
+  <tr><td>1936</td><td>Front Populaire — Léon Blum</td></tr>
+  <tr><td>1939–1945</td><td>Seconde Guerre Mondiale</td></tr>
+  <tr><td>1945–1946</td><td>Procès de Nuremberg</td></tr>
+  <tr><td>1947</td><td>Début guerre froide — Plan Marshall</td></tr>
+  <tr><td>1949</td><td>OTAN · Bombe atomique soviétique</td></tr>
+  <tr><td>1961</td><td>Mur de Berlin</td></tr>
+  <tr><td>1989</td><td>Chute du Mur de Berlin</td></tr>
+  <tr><td>1991</td><td>Dissolution de l'URSS</td></tr></table>`}
+],
+2:[
+  {title:"Génétique — ADN, chromosomes, allèles",content:`<ul><li><strong>ADN</strong> : molécule porteuse de l'information génétique, dans le noyau des cellules</li><li><strong>Chromosome</strong> : structure contenant l'ADN · les humains ont <strong>46 chromosomes</strong> (23 paires)</li><li><strong>Gène</strong> : portion d'ADN codant pour un caractère</li><li><strong>Allèle</strong> : version d'un même gène</li><li><strong>Génotype</strong> : composition génétique · <strong>Phénotype</strong> : caractère observable</li></ul>
+  <div class="formula-box">Allèle dominant (A) : s'exprime même en 1 exemplaire<br>Allèle récessif (a) : s'exprime seulement si présent en 2 exemplaires (aa)<br>Grille de Punnett Aa × Aa → 3/4 dominant, 1/4 récessif</div>`},
+  {title:"Système immunitaire & Vaccins",content:`<p><strong>Étapes de la réponse immunitaire :</strong></p>
+  <ol style="padding-left:1.4rem;font-size:14px;line-height:1.9;color:#333">
+  <li>Barrières naturelles : peau, muqueuses</li>
+  <li>Réaction inflammatoire : phagocytose par les macrophages</li>
+  <li>Immunité spécifique : lymphocytes B (anticorps) + lymphocytes T (destruction cellules infectées)</li>
+  <li>Mémoire immunitaire : réponse + rapide au 2e contact</li></ol>
+  <div class="tip-box">💡 Vaccination : antigène atténué → mémoire immunitaire → protection lors d'un futur contact. Immunité collective = si assez de vaccinés, le virus ne circule plus.</div>`},
+  {title:"Forces & Gravitation",content:`<p>Une force se caractérise par : point d'application, direction, sens, valeur (en Newtons).</p>
+  <div class="formula-box">Poids : P = m × g<br>g Terre = 9,8 N/kg · g Lune ≈ 1,6 N/kg · g Mars ≈ 3,7 N/kg<br>Équilibre : somme des forces = 0</div>
+  <p><strong>Masse (kg)</strong> = constante, ne change pas selon le lieu.<br><strong>Poids (N)</strong> = varie selon la gravité du lieu.</p>`},
+  {title:"Électricité & Énergie",content:`<p><strong>Circuits :</strong></p>
+  <ul><li><strong>Série</strong> : même intensité partout · tensions s'additionnent · si 1 élément grille → tout s'éteint</li><li><strong>Dérivation</strong> : même tension · intensités s'additionnent · si 1 élément grille → les autres fonctionnent</li></ul>
+  <div class="formula-box">Loi d'Ohm : U = R × I (Volts = Ohms × Ampères)<br>Énergie : E = P × t (Joules = Watts × secondes)<br>1 kWh = kW × h = 3 600 000 J</div>`},
+  {title:"Réactions chimiques & pH",content:`<div class="formula-box">Loi de Lavoisier : masse réactifs = masse produits<br>"Rien ne se perd, rien ne se crée, tout se transforme"</div>
+  <table class="mini-table"><tr><th>pH</th><th>Nature</th><th>Exemple</th></tr>
+  <tr><td>pH &lt; 7</td><td>Acide</td><td>Jus de citron, vinaigre</td></tr>
+  <tr><td>pH = 7</td><td>Neutre</td><td>Eau pure</td></tr>
+  <tr><td>pH &gt; 7</td><td>Basique</td><td>Savon, eau de Javel</td></tr></table>`},
+  {title:"Tectonique des plaques",content:`<p>La Terre est formée de <strong>plaques lithosphériques</strong> en mouvement (quelques cm/an).</p>
+  <table class="mini-table"><tr><th>Frontière</th><th>Mouvement</th><th>Conséquences</th></tr>
+  <tr><td>Divergente</td><td>Plaques s'écartent</td><td>Dorsales, volcanisme</td></tr>
+  <tr><td>Convergente</td><td>Plaques se rapprochent</td><td>Subduction, séismes, volcans</td></tr>
+  <tr><td>Coulissante</td><td>Plaques glissent</td><td>Séismes (ex: San Andreas)</td></tr></table>
+  <div class="tip-box">💡 Séisme : foyer = origine en profondeur · épicentre = point en surface à la verticale du foyer.</div>`}
+]
+};
+
+const QUESTIONS = {
+0:[
+  {q:"Quel est le résultat de 3/4 + 2/3 ?",hint:"Trouver le dénominateur commun entre 4 et 3.",opts:["5/7","17/12","1/2","7/12"],ans:1,exp:"3/4 = 9/12 et 2/3 = 8/12, donc 9/12 + 8/12 = 17/12."},
+  {q:"Un article coûte 80 €. Il est soldé à −15 %. Quel est le prix final ?",hint:"Multiplier par (1 − 0,15) = 0,85",opts:["65 €","68 €","72 €","74 €"],ans:1,exp:"80 × 0,85 = 68 €."},
+  {q:"Dans un triangle rectangle en C, AC = 3 cm et BC = 4 cm. Quelle est la longueur AB ?",hint:"AB² = AC² + BC²",opts:["5 cm","7 cm","√7 cm","25 cm"],ans:0,exp:"AB² = 9 + 16 = 25 → AB = √25 = 5 cm."},
+  {q:"Dans un triangle rectangle en A, angle B = 40° et hypoténuse BC = 8 cm. Quelle formule donne AB ?",opts:["AB = BC × sin(40°)","AB = BC × cos(40°)","AB = BC × tan(40°)","AB = BC / cos(40°)"],ans:1,exp:"cos(B) = adjacent/hypoténuse = AB/BC → AB = BC × cos(40°)."},
+  {q:"Quelle est la médiane de la série : 5 ; 8 ; 12 ; 17 ; 23 ?",hint:"Série ordonnée → valeur du milieu",opts:["8","12","13","17"],ans:1,exp:"5 valeurs ordonnées → la 3e est 12 : c'est la médiane."},
+  {q:"On lance un dé à 6 faces. Probabilité d'obtenir un nombre impair ?",opts:["1/3","1/2","2/3","1/6"],ans:1,exp:"Nombres impairs : 1, 3, 5 → 3 cas sur 6 → P = 1/2."},
+  {q:"Quelle est la valeur de f(3) pour f(x) = 2x − 1 ?",opts:["5","3","7","1"],ans:0,exp:"f(3) = 2 × 3 − 1 = 6 − 1 = 5."},
+  {q:"Une droite passe par A(0 ; 2) et B(3 ; 8). Quel est son coefficient directeur ?",hint:"a = (y2 − y1) / (x2 − x1)",opts:["2","3","6","1/2"],ans:0,exp:"a = (8 − 2) / (3 − 0) = 6/3 = 2."},
+  {q:"Résoudre : 3x + 7 = 22",opts:["x = 5","x = 3","x = 7","x = 4"],ans:0,exp:"3x = 22 − 7 = 15 → x = 5."},
+  {q:"Développer : (x + 3)(x − 3)",opts:["x² − 9","x² + 9","x² − 6x + 9","x² + 6x − 9"],ans:0,exp:"Identité remarquable (a+b)(a−b) = a² − b² → x² − 9."},
+  {q:"Volume d'un cylindre de rayon 3 cm et hauteur 5 cm ? (π ≈ 3,14)",opts:["47,1 cm³","141,3 cm³","94,2 cm³","28,3 cm³"],ans:1,exp:"V = π × r² × h = 3,14 × 9 × 5 = 141,3 cm³."},
+  {q:"Quelle est la notation scientifique de 0,00042 ?",opts:["4,2 × 10⁻⁴","4,2 × 10⁴","42 × 10⁻⁵","0,42 × 10⁻³"],ans:0,exp:"On déplace la virgule de 4 rangs vers la droite → 4,2 × 10⁻⁴."},
+  {q:"Un sac contient 5 billes rouges, 3 bleues, 2 vertes. Probabilité de tirer une bille bleue ?",opts:["3/10","1/3","3/8","1/5"],ans:0,exp:"P = 3 / (5+3+2) = 3/10."},
+  {q:"Factoriser : x² − 5x",opts:["x(x − 5)","x(x + 5)","(x−5)²","5(x−1)"],ans:0,exp:"On met x en facteur : x² − 5x = x(x − 5)."},
+  {q:"Droite : ordonnée à l'origine 4, pente −2. Quelle est f(5) ?",opts:["−6","6","14","−4"],ans:0,exp:"f(x) = −2x + 4 → f(5) = −10 + 4 = −6."},
+  {q:"Étendue de la série : 3 ; 7 ; 9 ; 15 ; 21 ?",opts:["18","12","15","21"],ans:0,exp:"Étendue = valeur max − valeur min = 21 − 3 = 18."},
+  {q:"Triangle aux côtés 6 cm, 8 cm et 10 cm. Est-il rectangle ?",opts:["Oui, car 6² + 8² = 10²","Non, car 6 + 8 ≠ 10","Oui, car 6 × 8 = 10","Impossible à déterminer"],ans:0,exp:"6² + 8² = 36 + 64 = 100 = 10² → triangle rectangle (réciproque de Pythagore)."},
+  {q:"Moyenne de : 10 ; 14 ; 8 ; 16 ; 12 ?",opts:["12","13","10","11"],ans:0,exp:"Somme = 60, nb de valeurs = 5 → moyenne = 60/5 = 12."},
+  {q:"Résoudre : 2(x + 3) = x + 9",opts:["x = 3","x = 5","x = −3","x = 1"],ans:0,exp:"2x + 6 = x + 9 → x = 3."},
+  {q:"Quelle formule calcule le volume d'une boule de rayon r ?",opts:["π × r²","(4/3) × π × r³","(1/3) × π × r² × h","2 × π × r"],ans:1,exp:"Volume d'une boule = (4/3) × π × r³."}
+],
+1:[
+  {q:"Quelle est la date du début de la Seconde Guerre Mondiale ?",opts:["1er septembre 1939","11 novembre 1918","8 mai 1945","28 juillet 1914"],ans:0,exp:"La SGM débute le 1er septembre 1939 avec l'invasion de la Pologne par l'Allemagne nazie."},
+  {q:"Qui dirige le régime de Vichy après la défaite de juin 1940 ?",opts:["Charles de Gaulle","Léon Blum","Philippe Pétain","Georges Clemenceau"],ans:2,exp:"Philippe Pétain dirige le régime de Vichy, gouvernement collaborationniste avec l'Allemagne nazie (1940-1944)."},
+  {q:"Quel événement symbolise la fin de la guerre froide ?",opts:["La crise des missiles de Cuba","La chute du Mur de Berlin en 1989","La mort de Staline","La création de l'OTAN"],ans:1,exp:"La chute du Mur de Berlin, le 9 novembre 1989, marque la fin de la guerre froide."},
+  {q:"Qu'est-ce que la métropolisation ?",opts:["La croissance des villages ruraux","La concentration des hommes et activités dans les grandes villes","La construction de nouvelles routes","La division d'une ville en quartiers"],ans:1,exp:"La métropolisation est la concentration croissante des hommes, richesses et activités dans les métropoles."},
+  {q:"Quels droits ont été acquis par les Accords Matignon de 1936 ?",opts:["Le droit de vote des femmes","Congés payés et semaine de 40h","La sécurité sociale","La retraite à 60 ans"],ans:1,exp:"Les Accords Matignon (juin 1936) instaurent la semaine de 40h, 2 semaines de congés payés et la liberté syndicale."},
+  {q:"Combien de chambres compose le Parlement français ?",opts:["1 seule chambre","2 (Assemblée Nationale + Sénat)","3 chambres","4 chambres"],ans:1,exp:"Le Parlement est bicaméral : Assemblée Nationale (577 députés) + Sénat (348 sénateurs)."},
+  {q:"Qu'est-ce que l'espace périurbain ?",opts:["Le centre historique d'une ville","La zone entre banlieue et espace rural","Un quartier d'affaires","Un port maritime"],ans:1,exp:"L'espace périurbain est la zone périphérique entre banlieues et espaces ruraux, caractérisée par l'essor des lotissements."},
+  {q:"La Shoah désigne…",opts:["La résistance juive pendant la SGM","L'extermination de ~6 millions de Juifs par les nazis","Les bombardements alliés en Allemagne","La capitulation allemande"],ans:1,exp:"La Shoah est le génocide des Juifs d'Europe orchestré par le régime nazi. Environ 6 millions de victimes."},
+  {q:"En quelle année les États-Unis entrent-ils dans la Seconde Guerre Mondiale ?",opts:["1939","1940","1941","1943"],ans:2,exp:"Le 7 décembre 1941, le Japon bombarde Pearl Harbor → les USA déclarent la guerre."},
+  {q:"La crise des missiles de Cuba (1962) oppose…",opts:["France et Allemagne","États-Unis et URSS","Chine et Japon","OTAN et ONU"],ans:1,exp:"La crise de Cuba oppose JFK et Khrouchtchev : le moment le plus tendu de la guerre froide."},
+  {q:"Quel est le rôle principal des députés à l'Assemblée Nationale ?",opts:["Nommer les ministres","Voter les lois et contrôler le gouvernement","Élire le Président","Rédiger la Constitution"],ans:1,exp:"Les 577 députés votent les lois, le budget et contrôlent l'action du gouvernement."},
+  {q:"Que signifie 'suffrage universel direct' ?",opts:["Les élus sont choisis par d'autres élus","Tous les citoyens majeurs votent directement","Seuls les hommes votent","Le vote est obligatoire"],ans:1,exp:"Le suffrage universel direct = tous les citoyens majeurs votent directement pour élire leurs représentants."},
+  {q:"Quel débarquement du 6 juin 1944 contribua à libérer la France ?",opts:["Débarquement en Provence","Débarquement en Normandie","Débarquement en Corse","Débarquement en Bretagne"],ans:1,exp:"Le D-Day (6 juin 1944) : les Alliés débarquent sur les plages de Normandie."},
+  {q:"Quelle est la seule métropole mondiale française ?",opts:["Marseille","Lyon","Bordeaux","Paris"],ans:3,exp:"Paris est la seule ville-monde française, concentrant sièges de multinationales et institutions internationales."},
+  {q:"La devise de la République française est…",opts:["Travail, Famille, Patrie","Liberté, Égalité, Fraternité","Un pour tous, tous pour un","Droit, Justice, Paix"],ans:1,exp:"Liberté, Égalité, Fraternité — devise héritée de la Révolution de 1789."},
+  {q:"Le Pacte de Varsovie (1955) regroupe les pays…",opts:["Occidentaux alliés des USA","Communistes alliés de l'URSS","Neutres pendant la guerre froide","Membres fondateurs de l'ONU"],ans:1,exp:"Le Pacte de Varsovie est l'alliance militaire des pays communistes sous l'égide de l'URSS."},
+  {q:"Qui prononce l'Appel du 18 juin 1940 ?",opts:["Philippe Pétain","Winston Churchill","Charles de Gaulle","Dwight Eisenhower"],ans:2,exp:"De Gaulle lance depuis Londres sur la BBC l'appel du 18 juin 1940, refusant la capitulation."},
+  {q:"La Rafle du Vel d'Hiv a eu lieu…",opts:["Juin 1940","Juillet 1942","Juin 1944","Mai 1945"],ans:1,exp:"16-17 juillet 1942 : 13 000 Juifs (dont 4 000 enfants) arrêtés par la police française."},
+  {q:"Qu'est-ce qu'une aire urbaine ?",opts:["Une ville médiévale fortifiée","Un quartier défavorisé","Ville-centre + banlieues + communes périurbaines liées par les trajets domicile-travail","Un parc naturel urbain"],ans:2,exp:"L'aire urbaine = ville-centre + banlieues + communes dont une partie des habitants travaille dans la ville-centre."},
+  {q:"Quel principe garantit l'équilibre entre pouvoirs législatif, exécutif et judiciaire ?",opts:["Le vote universel","La séparation des pouvoirs","La proportionnelle","Le Conseil Constitutionnel"],ans:1,exp:"La séparation des pouvoirs (Montesquieu) garantit qu'aucun pouvoir ne domine les autres en démocratie."}
+],
+2:[
+  {q:"Combien de chromosomes possède une cellule humaine normale ?",opts:["23","44","46","48"],ans:2,exp:"Les cellules humaines contiennent 46 chromosomes, organisés en 23 paires."},
+  {q:"Un allèle dominant s'exprime…",opts:["Seulement en deux exemplaires","Même en un seul exemplaire","Uniquement chez la femme","Uniquement après la puberté"],ans:1,exp:"Un allèle dominant s'exprime dans le phénotype même à l'état hétérozygote (un seul exemplaire suffit)."},
+  {q:"Qu'est-ce qu'un anticorps ?",opts:["Une bactérie bénéfique","Une protéine produite par les lymphocytes B pour neutraliser un antigène","Un globule rouge","Une enzyme digestive"],ans:1,exp:"Les anticorps sont des protéines spécifiques d'un antigène, produites par les lymphocytes B."},
+  {q:"Quel est le principe de la vaccination ?",opts:["Détruire les virus avant qu'ils entrent dans le corps","Créer une mémoire immunitaire via un antigène inoffensif","Augmenter le nombre de globules rouges","Bloquer la production d'anticorps"],ans:1,exp:"Le vaccin introduit un antigène atténué → production de cellules mémoire → protection lors d'un futur contact."},
+  {q:"Quelle est la formule du poids d'un objet ?",opts:["P = m / g","P = m + g","P = m × g","P = g / m"],ans:2,exp:"P = m × g, où P est en Newtons (N), m en kilogrammes (kg) et g l'intensité de la pesanteur."},
+  {q:"Valeur de g (pesanteur) sur la Lune ?",opts:["9,8 N/kg","6,7 N/kg","3,7 N/kg","1,6 N/kg"],ans:3,exp:"g Lune ≈ 1,6 N/kg, soit environ 6 fois moins qu'à la surface de la Terre (9,8 N/kg)."},
+  {q:"Un objet de 4 kg : quel est son poids sur Terre ? (g = 9,8 N/kg)",opts:["4 N","9,8 N","39,2 N","43,2 N"],ans:2,exp:"P = m × g = 4 × 9,8 = 39,2 N."},
+  {q:"Quelle loi relie tension, intensité et résistance dans un circuit électrique ?",opts:["Loi de Newton","Loi d'Ohm : U = R × I","Loi de Faraday","Loi de Coulomb"],ans:1,exp:"Loi d'Ohm : U (Volts) = R (Ohms) × I (Ampères)."},
+  {q:"En circuit série, que se passe-t-il si une ampoule grille ?",opts:["Les autres brillent plus fort","Tout le circuit s'éteint","Les autres ampoules ne changent pas","Le circuit prend feu"],ans:1,exp:"En série, si un élément est interrompu, le circuit est ouvert et tout s'éteint."},
+  {q:"Quelle est la formule de l'énergie électrique ?",opts:["E = P / t","E = P × t","E = P + t","E = t / P"],ans:1,exp:"E = P × t (Joules = Watts × secondes ; kWh = kW × heures)."},
+  {q:"Un fer à repasser de 2000 W fonctionne 30 minutes. Énergie consommée ?",hint:"30 min = 0,5 h → E = P × t",opts:["1000 Wh = 1 kWh","4000 Wh = 4 kWh","60 Wh","2000 kWh"],ans:0,exp:"E = 2000 W × 0,5 h = 1000 Wh = 1 kWh."},
+  {q:"Que mesure le pH ?",opts:["La température d'une solution","L'acidité ou la basicité d'une solution","La masse volumique","La couleur d'une solution"],ans:1,exp:"Le pH mesure l'acidité (pH < 7), la neutralité (pH = 7) ou la basicité (pH > 7) d'une solution."},
+  {q:"La loi de Lavoisier (conservation de la masse) dit que…",opts:["La masse augmente pendant une réaction","La masse diminue car des gaz s'échappent","Masse des réactifs = Masse des produits","Les atomes disparaissent pendant la réaction"],ans:2,exp:"Conservation de la masse : masse totale des réactifs = masse totale des produits (système fermé)."},
+  {q:"Qu'est-ce que l'épicentre d'un séisme ?",opts:["Le point en profondeur où se produit le séisme","Le point en surface à la verticale du foyer","La ville la plus touchée","La mesure sur l'échelle de Richter"],ans:1,exp:"L'épicentre est le point à la surface terrestre situé à la verticale du foyer (hypocentre)."},
+  {q:"À une frontière de plaques divergentes, que se passe-t-il ?",opts:["Collision → formation de montagnes","Plaques s'écartent → dorsales et volcanisme","Glissement latéral → séismes","Rien, les plaques ne bougent pas"],ans:1,exp:"Aux frontières divergentes, les plaques s'écartent et du magma remonte → dorsales océaniques."},
+  {q:"Qu'est-ce que l'ADN ?",opts:["Une protéine musculaire","La molécule porteuse de l'information génétique dans le noyau","Un sucre dans le sang","Une vitamine essentielle"],ans:1,exp:"L'ADN est la molécule porteuse de l'information génétique, présente dans le noyau sous forme de chromosomes."},
+  {q:"Plant hétérozygote (Jj, jaune dominant) × plant vert (jj). Quel % de descendants sera vert ?",opts:["0 %","25 %","50 %","75 %"],ans:2,exp:"Jj × jj → Jj (jaune) et jj (vert) en parts égales → 50 % de descendants verts."},
+  {q:"Quelle est la différence entre masse et poids ?",opts:["Ce sont des synonymes","La masse dépend du lieu, le poids est constant","La masse est constante (kg), le poids varie selon la gravité (N)","Le poids est constant, la masse varie"],ans:2,exp:"Masse (kg) = constante · Poids (N) = P = m × g, varie selon le lieu."},
+  {q:"Quel est le rôle des lymphocytes T cytotoxiques ?",opts:["Produire des anticorps","Transporter l'oxygène dans le sang","Détruire directement les cellules infectées","Former des caillots sanguins"],ans:2,exp:"Les lymphocytes T cytotoxiques détruisent directement les cellules infectées par un agent pathogène."},
+  {q:"Quelle formule calcule le volume d'un cylindre ?",opts:["π × r²","(4/3) × π × r³","π × r² × h","(1/3) × π × r² × h"],ans:2,exp:"Volume d'un cylindre = π × r² × h, où r est le rayon et h la hauteur."}
+]
+};
+
+let curSubj=0, curMode='fiches', curQ=0;
+let answered={}, scores={0:{done:0,good:0},1:{done:0,good:0},2:{done:0,good:0}};
+let ficheOpen={};
+
+const COLORS=['kb-blue','kb-amber','kb-green'];
+const LABELS=['Mathématiques','Histoire-Géo & EMC','Sciences'];
+
+function switchSubject(s){
+  curSubj=s; curQ=0;
+  document.querySelectorAll('.stab').forEach((el,i)=>el.classList.toggle('active',i===s));
+  render();
+}
+function switchMode(m){
+  curMode=m;
+  document.getElementById('mb0').classList.toggle('active',m==='fiches');
+  document.getElementById('mb1').classList.toggle('active',m==='exos');
+  curQ=0; render();
+}
+function render(){
+  curMode==='fiches' ? renderFiches() : renderExos();
+}
+
+function renderFiches(){
+  const fiches=FICHES[curSubj];
+  let html=`<div class="section-title">${LABELS[curSubj]} — ${fiches.length} fiches de cours</div>`;
+  fiches.forEach((f,i)=>{
+    const key=curSubj+'_'+i;
+    const isOpen=ficheOpen[key];
+    html+=`<div class="fiche">
+      <div class="fiche-header" onclick="toggleFiche('${key}')">
+        <h3><span class="tag ${COLORS[curSubj]}">${i+1}</span>${f.title}</h3>
+        <span class="chevron${isOpen?' open':''}">▼</span>
+      </div>
+      <div class="fiche-body${isOpen?' open':''}">${f.content}</div>
+    </div>`;
+  });
+  html+=`<button class="btn btn-primary btn-full" onclick="switchMode('exos')">Passer aux exercices →</button>`;
+  document.getElementById('main-area').innerHTML=html;
+}
+
+function toggleFiche(key){
+  ficheOpen[key]=!ficheOpen[key];
+  renderFiches();
+}
+
+function renderExos(){
+  const qs=QUESTIONS[curSubj];
+  const s=scores[curSubj];
+  if(s.done===20){
+    const pct=Math.round(s.good/20*100);
+    const msg=pct>=80?'Excellent ! Tu es prêt(e) pour le brevet !':pct>=60?'Bien ! Revois tes erreurs pour progresser.':'Continue à réviser, tu vas y arriver !';
+    const emoji=pct>=80?'🎉':pct>=60?'👍':'💪';
+    document.getElementById('main-area').innerHTML=`<div class="final">
+      <div style="font-size:48px">${emoji}</div>
+      <div class="final-score">${s.good}/20</div>
+      <div class="final-msg">${msg} (${pct}%)</div>
+      <div class="grid2">
+        <div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">✓ Correctes</div></div>
+        <div class="stat"><div class="stat-n" style="color:#dc2626">${20-s.good}</div><div class="stat-l">✗ Erreurs</div></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn" onclick="resetExos()">🔄 Recommencer</button>
+        <button class="btn btn-primary" onclick="switchMode('fiches')">📖 Revoir les fiches</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const pct=Math.round(s.done/20*100);
+  const q=qs[curQ];
+  const key=curSubj+'_'+curQ;
+  const isAns=answered[key]!==undefined;
+  let optsHtml=q.opts.map((o,i)=>{
+    let cls='option';
+    if(isAns){if(i===q.ans)cls+=' correct';else if(i===answered[key]&&i!==q.ans)cls+=' wrong';}
+    return `<button class="${cls}"${isAns?' disabled':''} onclick="doAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`;
+  }).join('');
+  const fb=isAns?`<div class="feedback ${answered[key]===q.ans?'correct':'wrong'}"><strong>${answered[key]===q.ans?'✓ Bonne réponse !':'✗ Mauvaise réponse.'}</strong> ${q.exp}</div>`:'';
+  document.getElementById('main-area').innerHTML=`
+    <div class="stats">
+      <div class="stat"><div class="stat-n">${s.done}</div><div class="stat-l">Répondues</div></div>
+      <div class="stat"><div class="stat-n" style="color:#059669">${s.good}</div><div class="stat-l">Correctes</div></div>
+      <div class="stat"><div class="stat-n">${s.done?Math.round(s.good/s.done*100):0}%</div><div class="stat-l">Score</div></div>
+      <div class="stat"><div class="stat-n">${20-s.done}</div><div class="stat-l">Restantes</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num-label">Question ${curQ+1} / 20</span>
+        <span class="tag ${COLORS[curSubj]}" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px">${LABELS[curSubj]}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      ${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}
+      <div class="options">${optsHtml}</div>${fb}
+    </div>
+    <div class="nav">
+      <button class="btn" onclick="prevQ()"${curQ===0?' disabled':''}>← Précédente</button>
+      <span style="font-size:13px;color:#888;font-weight:600">${curQ+1} / 20</span>
+      <button class="btn btn-primary" onclick="nextQ()">Suivante →</button>
+    </div>`;
+}
+
+function doAnswer(i){
+  const key=curSubj+'_'+curQ;
+  if(answered[key]!==undefined)return;
+  answered[key]=i;
+  scores[curSubj].done++;
+  if(i===QUESTIONS[curSubj][curQ].ans)scores[curSubj].good++;
+  renderExos();
+}
+function nextQ(){
+  const qs=QUESTIONS[curSubj];
+  if(curQ<qs.length-1){curQ++;}
+  else{const n=qs.findIndex((_,i)=>answered[curSubj+'_'+i]===undefined);if(n!==-1)curQ=n;}
+  renderExos();
+}
+function prevQ(){if(curQ>0){curQ--;renderExos();}}
+function resetExos(){
+  for(let i=0;i<20;i++)delete answered[curSubj+'_'+i];
+  scores[curSubj]={done:0,good:0};curQ=0;renderExos();
+}
+
+render();
+</script>
+</body>
+</html>
